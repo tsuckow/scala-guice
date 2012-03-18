@@ -56,17 +56,14 @@ object ScalaMultibinder {
     binder.bind( Key.get( typeLiteral[im.Set[T]] ) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]] ) ) )
     result
   }
-  /*
-  public static <T> Multibinder<T> newSetBinder(
-      Binder binder, TypeLiteral<T> type, Annotation annotation) {
-    binder = binder.skipSources(RealMultibinder.class, Multibinder.class);
-    RealMultibinder<T> result = new RealMultibinder<T>(binder, type,
-        Key.get(Multibinder.<T>setOf(type), annotation));
-    binder.install(result);
-    return result;
+
+  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Annotation ):Multibinder[T] = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder] )
+    val result = Multibinder.newSetBinder( mybinder, settype, annotation )
+    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
+    result
   }
 
-  */
   def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Annotation ):Multibinder[T] = {
     val mybinder = binder.skipSources( classOf[ScalaMultibinder] )
     val result = Multibinder.newSetBinder( mybinder, settype, annotation )
