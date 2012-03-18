@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import sbt._
+import java.io.File
 
 class ScalaGuice(info: ProjectInfo) extends DefaultProject(info) {
 
@@ -31,4 +32,6 @@ class ScalaGuice(info: ProjectInfo) extends DefaultProject(info) {
       case x => error("Unsupported Scala version " + x)
     }
 
+  override def managedStyle = ManagedStyle.Maven
+  lazy val publishTo = Resolver.file("file",  new File("repo"))
 }
