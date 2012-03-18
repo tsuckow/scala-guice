@@ -50,17 +50,13 @@ object ScalaMultibinder {
     result
   }
 
-  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Annotation ):Multibinder[T] = {
+  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T] ):Multibinder[T] = {
     val mybinder = binder.skipSources( classOf[ScalaMultibinder] )
-    val result = Multibinder.newSetBinder( mybinder, settype, annotation )
-    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
+    val result = Multibinder.newSetBinder( mybinder, settype )
+    binder.bind( Key.get( typeLiteral[im.Set[T]] ) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]] ) ) )
     result
   }
-  /**
-  public static <T> Multibinder<T> newSetBinder(Binder binder, Class<T> type) {
-    return newSetBinder(binder, TypeLiteral.get(type));
-  }
-
+  /*
   public static <T> Multibinder<T> newSetBinder(
       Binder binder, TypeLiteral<T> type, Annotation annotation) {
     binder = binder.skipSources(RealMultibinder.class, Multibinder.class);
@@ -70,13 +66,14 @@ object ScalaMultibinder {
     return result;
   }
 
-   * Returns a new multibinder that collects instances of {@code type} in a {@link Set} that is
-   * itself bound with {@code annotation}.
-  public static <T> Multibinder<T> newSetBinder(
-      Binder binder, Class<T> type, Annotation annotation) {
-    return newSetBinder(binder, TypeLiteral.get(type), annotation);
+  */
+  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Annotation ):Multibinder[T] = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder] )
+    val result = Multibinder.newSetBinder( mybinder, settype, annotation )
+    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
+    result
   }
-
+/*
    * Returns a new multibinder that collects instances of {@code type} in a {@link Set} that is
    * itself bound with {@code annotationType}.
   public static <T> Multibinder<T> newSetBinder(Binder binder, TypeLiteral<T> type,
