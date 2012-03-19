@@ -90,7 +90,7 @@ object ScalaMultibinder {
 class ScalaMultibinder[T : Manifest]( binder:Binder, multibinder:Multibinder[T] ) {
   def addBinding() = {
     new ScalaModule.ScalaLinkedBindingBuilder[T] {
-      val self = binder bind typeLiteral[T]
+      val self = multibinder.addBinding
     }
   }
 
