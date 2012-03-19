@@ -1,5 +1,6 @@
 /*
  *  Copyright 2012 Benjamin Lings
+ *  Author: Thomas Suckow
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,53 +44,63 @@ object ScalaMultibinder {
    * Returns a new multibinder that collects instances of {@code type} in a {@link Set} that is
    * itself bound with no binding annotation.
    */
-  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T] ):Multibinder[T] = {
-    val mybinder = binder.skipSources( classOf[ScalaMultibinder] )
+  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T] ) = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, settype )
     binder.bind( Key.get( typeLiteral[im.Set[T]] ) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]] ) ) )
-    result
+    new ScalaMultibinder( binder, result )
   }
 
-  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T] ):Multibinder[T] = {
-    val mybinder = binder.skipSources( classOf[ScalaMultibinder] )
+  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T] ) = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, settype )
     binder.bind( Key.get( typeLiteral[im.Set[T]] ) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]] ) ) )
-    result
+    new ScalaMultibinder( binder, result )
   }
 
-  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Annotation ):Multibinder[T] = {
-    val mybinder = binder.skipSources( classOf[ScalaMultibinder] )
+  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Annotation ) = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, settype, annotation )
     binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
-    result
+    new ScalaMultibinder( binder, result )
   }
 
-  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Annotation ):Multibinder[T] = {
-    val mybinder = binder.skipSources( classOf[ScalaMultibinder] )
+  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Annotation ) = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, settype, annotation )
     binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
-    result
-  }
-/*
-   * Returns a new multibinder that collects instances of {@code type} in a {@link Set} that is
-   * itself bound with {@code annotationType}.
-  public static <T> Multibinder<T> newSetBinder(Binder binder, TypeLiteral<T> type,
-      Class<? extends Annotation> annotationType) {
-    binder = binder.skipSources(RealMultibinder.class, Multibinder.class);
-    RealMultibinder<T> result = new RealMultibinder<T>(binder, type,
-        Key.get(Multibinder.<T>setOf(type), annotationType));
-    binder.install(result);
-    return result;
+    new ScalaMultibinder( binder, result )
   }
 
-   * Returns a new multibinder that collects instances of {@code type} in a {@link Set} that is
-   * itself bound with {@code annotationType}.
-  public static <T> Multibinder<T> newSetBinder(Binder binder, Class<T> type,
-      Class<? extends Annotation> annotationType) {
-    return newSetBinder(binder, TypeLiteral.get(type), annotationType);
-  } 
-*/
+  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Class[_ <: Annotation] ) = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
+    val result = Multibinder.newSetBinder( mybinder, settype, annotation )
+    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
+    new ScalaMultibinder( binder, result )
+  }
+
+  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Class[_ <: Annotation] ) = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
+    val result = Multibinder.newSetBinder( mybinder, settype, annotation )
+    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
+    new ScalaMultibinder( binder, result )
+  }
 }
 
-class ScalaMultibinder() {
+class ScalaMultibinder[T : Manifest]( binder:Binder, multibinder:Multibinder[T] ) {
+  def addBinding() = {
+    new ScalaModule.ScalaLinkedBindingBuilder[T] {
+      val self = binder bind typeLiteral[T]
+    }
+  }
+
+  def get() = {
+    multibinder
+  }
+/*
+  //GUICE 3.0
+  def permitDuplicates():Unit = {
+    multibinder.permitDuplicates
+  }
+*/
 }
