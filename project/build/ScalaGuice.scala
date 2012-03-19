@@ -21,8 +21,8 @@ class ScalaGuice(info: ProjectInfo) extends DefaultProject(info) {
   // Repositories
 
   // Dependencies
-  val guice2 = "com.google.inject" % "guice" % "2.0"
-  val guicemulti2 = "com.google.inject.extensions" % "guice-multibindings" % "2.0"
+  val guice3 = "com.google.inject" % "guice" % "3.0"
+  val guicemulti3 = "com.google.inject.extensions" % "guice-multibindings" % "3.0"
   val guava = "com.google.guava" % "guava" % "11.0.1"
   val TwoPointEight = """2\.8\.\d""".r
   val TwoPointNine = """2\.9\.[\d.-]+""".r
