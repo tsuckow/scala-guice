@@ -97,10 +97,9 @@ class ScalaMultibinder[T : Manifest]( binder:Binder, multibinder:Multibinder[T] 
   def get() = {
     multibinder
   }
-/*
-  //GUICE 3.0
+
   def permitDuplicates():Unit = {
     multibinder.permitDuplicates
   }
-*/
+
 }
