@@ -6,6 +6,10 @@ version := "3.0.1"
 
 libraryDependencies += "com.google.inject" % "guice" % "3.0"
 
+libraryDependencies += "com.google.inject.extensions" % "guice-multibindings" % "3.0"
+
+libraryDependencies += "com.google.guava" % "guava" % "11.0.1"
+
 libraryDependencies += "org.scalatest" % "scalatest_2.9.0" % "1.4.1" % "test"
 
 crossScalaVersions := Seq("2.8.0", "2.8.1", "2.9.1")
