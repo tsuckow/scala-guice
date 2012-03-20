@@ -19,7 +19,7 @@ package binder
 import com.google.inject._
 import com.google.inject.binder._
 import java.lang.annotation.{Annotation => JAnnotation}
-
+import java.lang.reflect.{Constructor => JConstructor}
 /**
  * Proxy for [[com.google.inject.binder.ScopedBindingBuilder]]
  */
@@ -41,13 +41,16 @@ trait LinkedBindingBuilderProxy[T] extends LinkedBindingBuilder[T]
 
   override def self: LinkedBindingBuilder[T]
 
-  def to(implementation: Class[_ <: T]) = self to implementation
-  def to(implementation: TypeLiteral[_ <: T]) = self to implementation
-  def to(targetKey: Key[_ <: T]) = self to targetKey
-  def toInstance(instance: T) = self toInstance instance
-  def toProvider(provider: Provider[_ <: T]) = self toProvider provider
-  def toProvider(provider: Class[_ <: Provider[_ <: T]]) = self toProvider provider
-  def toProvider(providerKey: Key[_ <: Provider[_ <: T]]) = self toProvider providerKey
+  override def to(implementation: Class[_ <: T]) = self to implementation
+  override def to(implementation: TypeLiteral[_ <: T]) = self to implementation
+  override def to(targetKey: Key[_ <: T]) = self to targetKey
+  override def toConstructor[S <: T](constructor:JConstructor[S]) = self toConstructor(constructor)
+  override def toConstructor[S <: T](constructor:JConstructor[S], literal:TypeLiteral[_ <: S]) = self toConstructor(constructor,literal)
+  override def toInstance(instance: T) = self toInstance instance
+  override def toProvider(provider: Provider[_ <: T]) = self toProvider provider
+  override def toProvider(provider: Class[_ <: javax.inject.Provider[_ <: T]]) = self toProvider provider
+  override def toProvider(provider: TypeLiteral[_ <: javax.inject.Provider[_ <: T]]) = self toProvider provider
+  override def toProvider(providerKey: Key[_ <: javax.inject.Provider[_ <: T]]) = self toProvider providerKey
 }
 
 /**

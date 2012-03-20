@@ -4,7 +4,7 @@ organization := "uk.me.lings"
 
 version := "3.0.1"
 
-libraryDependencies += "com.google.inject" % "guice" % "2.0"
+libraryDependencies += "com.google.inject" % "guice" % "3.0"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.9.0" % "1.4.1" % "test"
 
