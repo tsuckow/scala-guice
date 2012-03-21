@@ -15,7 +15,9 @@
  */
 package uk.me.lings.scalaguice
 
+import com.google.inject.Inject
 import com.google.inject.Provider
+import com.google.inject.TypeLiteral
 
 object Outer {
   trait A
@@ -38,6 +40,10 @@ class BProvider extends Provider[B] {
 
 trait Gen[T] {
   def get: T
+}
+
+class TypeProvider[T] @Inject() ( typ:TypeLiteral[T] ) extends Provider[String] {
+  def get = typ.toString
 }
 
 class C extends Gen[String] {
