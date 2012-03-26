@@ -149,6 +149,53 @@ class MultibinderSpec extends WordSpec with ShouldMatchers {
       set should have size (1)
       set should contain ('A)
     }
+
+    //Scala Addons
+
+    "bind [T]" in {
+      import name.Named
+      val module = new AbstractModule with ScalaModule {
+        def configure = {
+          val multi = ScalaMultibinder.newSetBinder[String]( binder )
+          multi.addBinding.toInstance("A")
+          multi.addBinding.toInstance("B")
+        }
+      }
+      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]] ))
+      set should have size (2)
+      set should contain ("A")
+      set should contain ("B")
+    }
+
+    "bind [T, Ann]" in {
+      import name.Named
+      val module = new AbstractModule with ScalaModule {
+        def configure = {
+          val multi = ScalaMultibinder.newSetBinder[String,Named]( binder )
+          multi.addBinding.toInstance("A")
+          multi.addBinding.toInstance("B")
+        }
+      }
+      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]], classOf[Named] ))
+      set should have size (2)
+      set should contain ("A")
+      set should contain ("B")
+    }
+
+    "bind [T](Ann)" in {
+      import name.Named
+      val module = new AbstractModule with ScalaModule {
+        def configure = {
+          val multi = ScalaMultibinder.newSetBinder[String]( binder, Names.named("bla") )
+          multi.addBinding.toInstance("A")
+          multi.addBinding.toInstance("B")
+        }
+      }
+      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]], Names.named("bla") ))
+      set should have size (2)
+      set should contain ("A")
+      set should contain ("B")
+    }
   }
 }
 

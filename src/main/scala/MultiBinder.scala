@@ -70,6 +70,28 @@ object ScalaMultibinder {
     binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
     new ScalaMultibinder( binder, result )
   }
+
+  def newSetBinder[T : Manifest]( binder:Binder ) = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
+    val result = Multibinder.newSetBinder( mybinder, typeLiteral[T] )
+    binder.bind( Key.get( typeLiteral[im.Set[T]] ) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]] ) ) )
+    new ScalaMultibinder( binder, result )
+  }
+
+  def newSetBinder[T : Manifest]( binder:Binder, annotation:Annotation ) = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
+    val result = Multibinder.newSetBinder( mybinder, typeLiteral[T], annotation )
+    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
+    new ScalaMultibinder( binder, result )
+  }
+
+  def newSetBinder[T : Manifest, Ann <: Annotation : Manifest]( binder:Binder ) = {
+    val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
+    val annotation = manifest[Ann].erasure.asInstanceOf[Class[Ann]]
+    val result = Multibinder.newSetBinder( mybinder, typeLiteral[T], annotation )
+    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
+    new ScalaMultibinder( binder, result )
+  }
 }
 
 /**
