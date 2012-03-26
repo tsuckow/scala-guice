@@ -115,8 +115,9 @@ class ScalaMultibinder[T : Manifest]( binder:Binder, multibinder:Multibinder[T] 
     multibinder
   }
 
-  def permitDuplicates():Unit = {
+  def permitDuplicates():ScalaMultibinder[T] = {
     multibinder.permitDuplicates
+    this
   }
 
 }
