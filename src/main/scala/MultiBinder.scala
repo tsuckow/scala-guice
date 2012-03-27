@@ -24,9 +24,14 @@ import java.util.{Set => JSet}
 
 import scala.collection.{ immutable => im }
 
+/**
+ * Analog to the Guice Multibinder
+ *
+ * Use {@code newSetBinder} to create a multibinder instance
+*/
 object ScalaMultibinder {
   /**
-   * Returns a new multibinder that collects instances of {@code type} in a {@link Set} that is
+   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
    * itself bound with no binding annotation.
    */
   def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T] ) = {
@@ -36,6 +41,10 @@ object ScalaMultibinder {
     new ScalaMultibinder( binder, result )
   }
 
+  /**
+   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
+   * itself bound with no binding annotation.
+   */
   def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T] ) = {
     val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, settype )
@@ -43,6 +52,10 @@ object ScalaMultibinder {
     new ScalaMultibinder( binder, result )
   }
 
+  /**
+   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation.
+   */
   def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Annotation ) = {
     val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, settype, annotation )
@@ -50,6 +63,10 @@ object ScalaMultibinder {
     new ScalaMultibinder( binder, result )
   }
 
+  /**
+   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation.
+   */
   def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Annotation ) = {
     val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, settype, annotation )
@@ -57,6 +74,10 @@ object ScalaMultibinder {
     new ScalaMultibinder( binder, result )
   }
 
+  /**
+   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation.
+   */
   def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Class[_ <: Annotation] ) = {
     val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, settype, annotation )
@@ -64,6 +85,10 @@ object ScalaMultibinder {
     new ScalaMultibinder( binder, result )
   }
 
+  /**
+   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation.
+   */
   def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Class[_ <: Annotation] ) = {
     val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, settype, annotation )
@@ -71,6 +96,10 @@ object ScalaMultibinder {
     new ScalaMultibinder( binder, result )
   }
 
+  /**
+   * Returns a new multibinder that collects instances of type {@code T} in a [[scala.collection.immutable.Set]] that is
+   * itself bound with no binding annotation.
+   */
   def newSetBinder[T : Manifest]( binder:Binder ) = {
     val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, typeLiteral[T] )
@@ -78,6 +107,10 @@ object ScalaMultibinder {
     new ScalaMultibinder( binder, result )
   }
 
+  /**
+   * Returns a new multibinder that collects instances of type {@code T} in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation.
+   */
   def newSetBinder[T : Manifest]( binder:Binder, annotation:Annotation ) = {
     val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val result = Multibinder.newSetBinder( mybinder, typeLiteral[T], annotation )
@@ -85,6 +118,10 @@ object ScalaMultibinder {
     new ScalaMultibinder( binder, result )
   }
 
+  /**
+   * Returns a new multibinder that collects instances of type {@code T} in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation {@code Ann}.
+   */
   def newSetBinder[T : Manifest, Ann <: Annotation : Manifest]( binder:Binder ) = {
     val mybinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
     val annotation = manifest[Ann].erasure.asInstanceOf[Class[Ann]]
@@ -95,36 +132,7 @@ object ScalaMultibinder {
 }
 
 /**
- * Allows binding of scala  via type parameters. Mix into <code>AbstractModule</code>
- *  (or subclass) to allow using a type parameter instead of
- * <code>classOf[Foo]</code> or <code>new TypeLiteral[Bar[Foo]] {}</code>.
- * 
- * For example, instead of
- * {{{
- * class MyModule extends AbstractModule {
- *   def configure {
- *     bind(classOf[Service]).to(classOf[ServiceImpl]).in(classOf[Singleton])
- *     bind(classOf[CreditCardPaymentService])
- *     bind(new TypeLiteral[Bar[Foo]]{}).to(classOf[FooBarImpl])
- *     bind(classOf[PaymentService]).to(classOf[CreditCardPaymentService])
- *   }
- * }
- * }}}
- * use
- * {{{
- * class MyModule extends AbstractModule with ScalaModule {
- *   def configure {
- *     bind[Service].to[ServiceImpl].in[Singleton]
- *     bind[CreditCardPaymentService]
- *     bind[Bar[Foo]].to[FooBarImpl]
- *     bind[PaymentService].to[CreditCardPaymentService]
- *   }
- * }
- * }}}
- *
- * '''Note''' This syntax allows binding to and from generic types.
- * It doesn't currently allow bindings between wildcard types because the
- * manifests for wildcard types don't provide access to type bounds.
+ * Analog to the Guice Multibinder
  */
 class ScalaMultibinder[T : Manifest]( binder:Binder, multibinder:Multibinder[T] ) {
   def addBinding() = {
