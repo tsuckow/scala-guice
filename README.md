@@ -27,3 +27,7 @@ If technically possible:
 
 * Inject `Option[T]` for optional dependencies
 * Injection that takes variance into account
+
+Build Server:
+
+[Jenkins](http://ci.codingwell.net/job/Scala-Guice/)
