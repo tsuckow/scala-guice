@@ -88,6 +88,20 @@ class ScalaModuleSpec extends WordSpec with ShouldMatchers {
       Guice.createInjector(module).getInstance(Key.get(classOf[A],classOf[Named]))
     }
 
+    "give a useful error when bound on itself" in {
+      val module = new AbstractModule with ScalaModule {
+        def configure = {
+          bind[A].to[A]
+        }
+      }
+      val thrown = intercept[CreationException] {
+         Guice.createInjector(module).getInstance(classOf[A])
+      }
+      val messages = thrown.getErrorMessages
+      assert( messages.size == 1 )
+      val sources = messages.iterator.next.getSource
+      assert( sources.contains("ScalaModuleSpec.scala") )
+    }
   }
 
 }

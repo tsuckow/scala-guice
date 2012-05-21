@@ -57,16 +57,18 @@ trait ScalaModule extends AbstractModule {
 
   import ScalaModule._
 
-  private def binderAccess = super.binder // shouldn't need super
+  private def binderAccess = super.binder.skipSources( ancillaryClass ) // shouldn't need super
 
   def bind[T: Manifest] = new ScalaAnnotatedBindingBuilder[T] {
-     val self = binderAccess bind typeLiteral[T]
+     val mybinder = binderAccess.skipSources( this.getClass )
+     val self = mybinder bind typeLiteral[T]
   }
 
 }
 
 object ScalaModule {
   import java.lang.annotation.{Annotation => JAnnotation}
+  private val ancillaryClass = Class.forName( classOf[ScalaModule].getName + "$class" )
 
   trait ScalaScopedBindingBuilder extends ScopedBindingBuilderProxy {
     def in[TAnn <: JAnnotation : ClassManifest] = self in annotation[TAnn]
