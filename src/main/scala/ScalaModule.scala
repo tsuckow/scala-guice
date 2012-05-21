@@ -57,10 +57,13 @@ trait ScalaModule extends AbstractModule {
 
   import ScalaModule._
 
-  private def binderAccess = super.binder.skipSources( ancillaryClass ) // shouldn't need super
+  private def binderAccess = super.binder // shouldn't need super
 
   def bind[T: Manifest] = new ScalaAnnotatedBindingBuilder[T] {
-     val mybinder = binderAccess.skipSources( this.getClass )
+     //Hack, no easy way to exclude the bind method that gets added to classes inheriting ScalaModule
+     //So we experamentally figured out how many calls up is the source, so we use that
+     //Commit 52c2e92f8f6131e4a9ea473f58be3e32cd172ce6 has better class exclusion
+     val mybinder = binderAccess.withSource( (new Throwable).getStackTrace()(3) )
      val self = mybinder bind typeLiteral[T]
   }
 
@@ -68,7 +71,6 @@ trait ScalaModule extends AbstractModule {
 
 object ScalaModule {
   import java.lang.annotation.{Annotation => JAnnotation}
-  private val ancillaryClass = Class.forName( classOf[ScalaModule].getName + "$class" )
 
   trait ScalaScopedBindingBuilder extends ScopedBindingBuilderProxy {
     def in[TAnn <: JAnnotation : ClassManifest] = self in annotation[TAnn]
