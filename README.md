@@ -1,5 +1,7 @@
 Scala extensions for Google Guice
 
+[![Build Status](https://travis-ci.org/codingwell/scala-guice.png)](https://travis-ci.org/codingwell/scala-guice)
+
 Features:
 
 * `Manifest[T]` -> `TypeLiteral[T]` conversion (`typeLiteral[T]`)
