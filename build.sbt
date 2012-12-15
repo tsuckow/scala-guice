@@ -12,7 +12,7 @@ libraryDependencies += "com.google.guava" % "guava" % "11.0.1"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "1.8" % "test"
 
-crossScalaVersions := Seq("2.8.2", "2.9.2")
+crossScalaVersions := Seq("2.8.2", "2.9.1", "2.9.2")
 
 publishTo := Some(Resolver.file("file",  new File("repo")))
 
