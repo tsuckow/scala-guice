@@ -1,6 +1,6 @@
 name := "Scala Guice"
 
-organization := "uk.me.lings"
+organization := "net.codingwell"
 
 version := "3.0.1-SNAPSHOT"
 
