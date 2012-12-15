@@ -1,20 +1,36 @@
-Scala extensions for Google Guice
-=================================
+Scala extensions for Google Guice 3.0
+=====================================
 
-[![Build Status](https://travis-ci.org/codingwell/scala-guice.png)](https://travis-ci.org/codingwell/scala-guice)
+**Master:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=master)](https://travis-ci.org/codingwell/scala-guice)  
+**Develop:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=develop)](https://travis-ci.org/codingwell/scala-guice)
 
 Getting Started
 ---------------
 
-Just add this maven dependency:
+### Add dependency
+We currently support Scala `2.8.2, 2.9.2`
+
+##### maven:
 ```xml
 <dependency>
     <groupId>net.codingwell</groupId>
-    <artifactId>scala-guice_2.9</artifactId>
+    <artifactId>scala-guice_2.9.2</artifactId>
     <version>3.0.1</version>
 </dependency>
 ```
 
+#####sbt:
+```scala
+"net.codingwell" % "scala-guice_2.9.2" % "3.0.1"
+"net.codingwell" %% "scala-guice" % "3.0.1"
+```
+
+##### gradle:
+```scala
+'net.codingwell:scala-guice_2.9.2:3.0.1'
+```
+
+### Mixin
 Mixin ScalaModule with your AbstractModule for rich scala magic (or ScalaPrivateModule with your PrivateModule):
 ```scala
 class MyModule extends AbstractModule with ScalaModule {
@@ -40,6 +56,7 @@ class MyPrivateModule extends PrivateModule with ScalaPrivateModule {
 }
 ```
 
+### Inject
 Wrap the injector in a ScalaInjector for even more rich scala magic:
 ```scala
 object MyServer {
@@ -53,28 +70,45 @@ object MyServer {
 }
 ```
 
-Features:
----------
+Additional Features
+-------------------
 
-* `Manifest[T]` -> `TypeLiteral[T]` conversion (`typeLiteral[T]`)
-* Binding DSL extensions using type parameters to specify types
-* ScalaModule trait including the above binding DSL extensions
-* PrivateModule support
-* ScalaInjector wrapper over Injector
+### Module Traits
 
-Future:
--------
+```scala
+class MyModule extends AbstractModule with ScalaModule
+```
+```scala
+class MyPrivateModule extends PrivateModule with ScalaPrivateModule
+```
 
-* `TypeLiteral[T]` -> `Manifest[T]` conversion
-* Have `Manifest[T]` injected anywhere Guice could inject `TypeLiteral[T]` (see [Jesse's post for context](http://blog.publicobject.com/2008/11/guice-punches-erasure-in-face.html))
-* Extractor objects for pattern-matching against the binding AST
+This gives to access to scala style bindings:
 
-If technically possible:
+```scala
+bind[A].to[B]
+bind[A].to(classOf[B])
+bind[A].to(typeLiteral[B])
+bind[A].toInstance("A")
+bind[A].annotatedWith[Ann].to[B]
+bind[A].annotatedWith( Names.named("name") ).to[B]
+bind[A].toProvider[BProvider]
+bind[A].toProvider[TypeProvider[B]]
+bind[A[String]].to[B[String]]
+bind[A].to[B].in[Singleton]
+```
 
-* Inject `Option[T]` for optional dependencies
-* Injection that takes variance into account
+### Multibinding
 
-Build Server:
--------------
+The ScalaMultibinder adds scala style multibindings:
 
-[Jenkins](http://ci.codingwell.net/job/Scala-Guice/)
+```scala
+val multi = ScalaMultibinder.newSetBinder[String]( binder )
+multi.addBinding.to[A]
+multi.addBinding.toInstance("A")
+```
+
+### And the stuff we forgot...
+
+If you find a feature we support but don't mention here, submit an issue and we will add it.
+
+If you find a feature we don't support but want, implement it and send us a pull request. Alternatively, you can file an issue and we may or may not get to it.
