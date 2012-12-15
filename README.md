@@ -26,7 +26,7 @@ We currently support Scala `2.8.2, 2.9.2`
 ```
 
 ##### gradle:
-```scala
+```groovy
 'net.codingwell:scala-guice_2.9.2:3.0.1'
 ```
 
