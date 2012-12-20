@@ -1,8 +1,16 @@
 name := "Scala Guice"
 
+description := "Scala syntax for Guice"
+
 organization := "net.codingwell"
 
 version := "3.0.1"
+
+licenses := Seq("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
+
+homepage := Some(url("https://github.com/codingwell/scala-guice"))
+
+useGpg := true
 
 libraryDependencies += "com.google.inject" % "guice" % "3.0"
 
@@ -25,14 +33,6 @@ publishTo <<= version { (v: String) =>
 }
 
 pomExtra :=
-<url>https://github.com/codingwell/scala-guice</url>
-<licenses>
-  <license>
-    <name>The Apache Software License, Version 2.0</name>
-    <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    <distribution>repo</distribution>
-  </license>
-</licenses>
 <scm>
    <connection>scm:git:https://github.com/codingwell/scala-guice.git</connection>
    <developerConnection>scm:git:ssh://git@github.com:codingwell/scala-guice.git</developerConnection>
@@ -53,7 +53,6 @@ pomExtra :=
 </developers>
 <contributors>
   <contributor>
-    <id>benlings</id>
     <name>Ben Lings</name>
     <roles>
       <role>creator</role>
