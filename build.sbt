@@ -2,7 +2,7 @@ name := "Scala Guice"
 
 organization := "net.codingwell"
 
-version := "3.0.1-SNAPSHOT"
+version := "3.0.1"
 
 libraryDependencies += "com.google.inject" % "guice" % "3.0"
 
