@@ -4,7 +4,7 @@ description := "Scala syntax for Guice"
 
 organization := "net.codingwell"
 
-version := "3.0.2-SNAPSHOT"
+version := "3.0.2"
 
 licenses := Seq("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 
@@ -25,7 +25,7 @@ libraryDependencies <+= scalaVersion { (v:String) =>
       "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 }
 
-crossScalaVersions := Seq("2.8.2", "2.9.1", "2.9.2","2.10.0")
+crossScalaVersions := Seq("2.8.2", "2.9.1", "2.9.2", "2.10.0")
 
 testListeners <<= target.map(t => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath)))
 
