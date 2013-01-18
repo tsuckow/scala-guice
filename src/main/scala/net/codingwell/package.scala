@@ -21,6 +21,8 @@ package object scalaguice {
 
     import java.lang.reflect.Type
 
+    private def isArray[T](implicit m:Manifest[T]) = m.erasure.isArray
+
     private[scalaguice] def typeOf[T](implicit m: Manifest[T]): Type = {
         def toWrapper(c:Type) = c match {
             case java.lang.Byte.TYPE => classOf[java.lang.Byte]
@@ -34,6 +36,9 @@ package object scalaguice {
             case java.lang.Void.TYPE => classOf[java.lang.Void]
             case cls => cls
         }
+
+        if( isArray[T] ) return m.erasure
+
         import com.google.inject.util.Types
         m.typeArguments match {
             case Nil => toWrapper(m.erasure)
