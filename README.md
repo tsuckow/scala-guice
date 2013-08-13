@@ -1,33 +1,35 @@
-Scala extensions for Google Guice 3.0
+Scala extensions for Google Guice 4.0
 =====================================
 
-**Master:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=master)](https://travis-ci.org/codingwell/scala-guice)  
+**Master:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=master)](https://travis-ci.org/codingwell/scala-guice)
 **Develop:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=develop)](https://travis-ci.org/codingwell/scala-guice)
+
+Please submit pull requests against the **develop** branch.
 
 Getting Started
 ---------------
 
 ### Add dependency
-We currently support Scala `2.8.2, 2.9.1, 2.9.2, 2.10`
+We currently support Scala `2.8.2, 2.9.1, 2.9.2, 2.9.3, 2.10`
 
 ##### maven:
 ```xml
 <dependency>
     <groupId>net.codingwell</groupId>
     <artifactId>scala-guice_2.10</artifactId>
-    <version>3.0.2</version>
+    <version>4.0.0-beta</version>
 </dependency>
 ```
 
 #####sbt:
 ```scala
-"net.codingwell" % "scala-guice_2.10" % "3.0.2"
-"net.codingwell" %% "scala-guice" % "3.0.2"
+"net.codingwell" % "scala-guice_2.10" % "4.0.0-beta"
+"net.codingwell" %% "scala-guice" % "4.0.0-beta"
 ```
 
 ##### gradle:
 ```groovy
-'net.codingwell:scala-guice_2.10:3.0.2'
+'net.codingwell:scala-guice_2.10:4.0.0-beta'
 ```
 
 ### Mixin
