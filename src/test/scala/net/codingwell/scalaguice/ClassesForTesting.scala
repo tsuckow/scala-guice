@@ -57,3 +57,13 @@ class GenStringProvider extends Provider[Gen[String]] {
 class CProvider extends Provider[C] {
   def get = new C
 }
+
+trait Foo {
+  def foo(): String
+}
+
+class FooProviderWithJavax extends javax.inject.Provider[Foo] {
+  def get(): Foo = new Foo {
+    def foo() = "foo"
+  }
+}
