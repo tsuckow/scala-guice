@@ -111,6 +111,18 @@ class ScalaModuleSpec extends WordSpec with ShouldMatchers {
       val sources = messages.iterator.next.getSource
       assert( sources.contains("ScalaModuleSpec.scala") )
     }
+
+    "allow use annotatedWithName" in {
+      val module = new AbstractModule with ScalaModule {
+        def configure() = {
+          bind[String].annotatedWithName("first").toInstance("first")
+          bind[String].annotatedWithName("second").toInstance("second")
+        }
+      }
+      val twoStrings = Guice.createInjector(module).getInstance(classOf[TwoStrings])
+      twoStrings.first should be ("first")
+      twoStrings.second should be ("second")
+    }
   }
 
 }

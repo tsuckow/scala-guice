@@ -15,7 +15,9 @@
  */
 package net.codingwell.scalaguice
 
-import com.google.inject._
+import javax.inject.Provider
+
+import com.google.inject.Binder
 
 /**
  * Extensions for Guice's binding DSL.
