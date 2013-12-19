@@ -18,6 +18,7 @@ package net.codingwell.scalaguice
 import javax.inject.Provider
 
 import com.google.inject.Binder
+import com.google.inject.name.Names
 
 /**
  * Extensions for Guice's binding DSL.
@@ -72,6 +73,7 @@ object BindingExtensions {
 
   class ScalaAnnotatedConstantBindingBuilder(b: AnnotatedConstantBindingBuilder) {
     def annotatedWithType[TAnn <: JAnnotation : Manifest] = b annotatedWith cls[TAnn]
+    def annotatedWithName(name: String) = b annotatedWith Names.named(name)
   }
 
   implicit def enrichAnnotatedConstantBindingBuilder(b: AnnotatedConstantBindingBuilder) = {

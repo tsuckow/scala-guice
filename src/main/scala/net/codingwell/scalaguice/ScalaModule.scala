@@ -105,8 +105,7 @@ object ScalaModule {
     def in[TAnn <: JAnnotation : Manifest]() = self in cls[TAnn]
   }
 
-  trait ScalaLinkedBindingBuilder[T] extends ScalaScopedBindingBuilder
-  with LinkedBindingBuilderProxy[T] { outer =>
+  trait ScalaLinkedBindingBuilder[T] extends ScalaScopedBindingBuilder with LinkedBindingBuilderProxy[T] { outer =>
     def to[TImpl <: T : Manifest] = new ScalaScopedBindingBuilder {
       val self = outer.self to typeLiteral[TImpl]
     }
@@ -116,8 +115,7 @@ object ScalaModule {
     }
   }
 
-  trait ScalaAnnotatedBindingBuilder[T] extends ScalaLinkedBindingBuilder[T]
-  with AnnotatedBindingBuilderProxy[T] { outer =>
+  trait ScalaAnnotatedBindingBuilder[T] extends ScalaLinkedBindingBuilder[T] with AnnotatedBindingBuilderProxy[T] { outer =>
     def annotatedWith[TAnn <: JAnnotation : Manifest] = new ScalaLinkedBindingBuilder[T] {
       val self = outer.self annotatedWith cls[TAnn]
     }

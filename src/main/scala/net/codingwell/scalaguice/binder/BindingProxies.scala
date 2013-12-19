@@ -82,4 +82,5 @@ trait AnnotatedElementBuilderProxy[T] extends AnnotatedElementBuilder with Proxy
 
   def annotatedWith(annotation: JAnnotation) = self annotatedWith annotation
   def annotatedWith(annotationType: Class[_ <: JAnnotation]) = self annotatedWith annotationType
+  def annotatedWithName(name: String) = annotatedWith(Names.named(name))
 }

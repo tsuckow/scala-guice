@@ -113,10 +113,11 @@ class ScalaModuleSpec extends WordSpec with ShouldMatchers {
     }
 
     "allow use annotatedWithName" in {
+      import net.codingwell.scalaguice.BindingExtensions._
       val module = new AbstractModule with ScalaModule {
         def configure() = {
           bind[String].annotatedWithName("first").toInstance("first")
-          bind[String].annotatedWithName("second").toInstance("second")
+          bindConstant().annotatedWithName("second").to("second")
         }
       }
       val twoStrings = Guice.createInjector(module).getInstance(classOf[TwoStrings])
