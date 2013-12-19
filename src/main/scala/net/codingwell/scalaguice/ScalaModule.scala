@@ -18,6 +18,7 @@ package net.codingwell.scalaguice
 import com.google.inject._
 import binder._
 import java.lang.annotation.Annotation
+import javax.inject.Provider
 
 /**
  * Allows binding via type parameters. Mix into <code>AbstractModule</code>
