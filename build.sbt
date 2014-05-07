@@ -26,8 +26,6 @@ crossScalaVersions := Seq("2.10.4", "2.11.0")
 
 testListeners <<= target.map(t => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath)))
 
-logLevel := Level.Warn
-
 scalacOptions := Seq("-unchecked", "-deprecation", "-feature")
 
 publishTo <<= version { (v: String) =>
