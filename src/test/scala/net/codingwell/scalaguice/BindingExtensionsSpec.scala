@@ -15,12 +15,11 @@
  */
 package net.codingwell.scalaguice
 
-import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, WordSpec}
 
 import com.google.inject._
 
-class BindingExtensionsSpec extends WordSpec with ShouldMatchers {
+class BindingExtensionsSpec extends WordSpec with Matchers {
 
   import BindingExtensions._
 

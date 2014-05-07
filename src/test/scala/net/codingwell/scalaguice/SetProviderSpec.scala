@@ -15,8 +15,7 @@
  */
 package net.codingwell.scalaguice
 
-import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, WordSpec}
 
 import com.google.inject._
 
@@ -24,7 +23,7 @@ import java.util.{Set => JSet, HashSet => JHashSet}
 
 import scala.collection.{ immutable => im }
 
-class SetProviderSpec extends WordSpec with ShouldMatchers {
+class SetProviderSpec extends WordSpec with Matchers {
 
   "A Set Provider" should {
 

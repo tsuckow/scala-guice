@@ -15,12 +15,11 @@
  */
 package net.codingwell.scalaguice
 
-import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, WordSpec}
 
 import com.google.inject._
 
-class ScalaModuleSpec extends WordSpec with ShouldMatchers {
+class ScalaModuleSpec extends WordSpec with Matchers {
 
   "A Scala Guice module" should {
 

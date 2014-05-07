@@ -15,10 +15,9 @@
  */
 package net.codingwell.scalaguice
 
-import org.scalatest.Spec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, FunSpec}
 
-class TypeLiteralSpec extends Spec with ShouldMatchers {
+class TypeLiteralSpec extends FunSpec with Matchers {
 
   import com.google.inject._
 

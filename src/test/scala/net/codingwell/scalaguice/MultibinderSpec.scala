@@ -15,8 +15,7 @@
  */
 package net.codingwell.scalaguice
 
-import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, WordSpec}
 
 import com.google.inject._
 import com.google.inject.name._
@@ -25,7 +24,7 @@ import java.util.{Set => JSet, HashSet => JHashSet}
 
 import scala.collection.{ immutable => im }
 
-class MultibinderSpec extends WordSpec with ShouldMatchers {
+class MultibinderSpec extends WordSpec with Matchers {
 
   "A multibinder" should {
 //  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Annotation ) = {
