@@ -16,14 +16,11 @@
 package net.codingwell.scalaguice
 
 import com.google.inject.Injector
+import KeyExtensions._
 
 object InjectorExtensions {
 
-  import KeyExtensions._
-
-  class ScalaInjector(i:Injector) {
+  implicit class ScalaInjector(i:Injector) {
     def instance[T : Manifest] = i.getInstance(typeLiteral[T].toKey)
   }
-
-  implicit def enrichInjector(i:Injector) = new ScalaInjector(i)
 }
