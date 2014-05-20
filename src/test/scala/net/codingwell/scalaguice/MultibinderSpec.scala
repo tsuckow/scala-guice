@@ -122,7 +122,7 @@ class MultibinderSpec extends WordSpec with Matchers {
       set should contain ("B")
     }
 
-    "not permit duplicates" in {
+    "deduplicate" in {
       import name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
@@ -131,9 +131,9 @@ class MultibinderSpec extends WordSpec with Matchers {
           multi.addBinding.toInstance('A)
         }
       }
-      intercept[ProvisionException] {
-        val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[Symbol]] ))
-      }
+      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[Symbol]] ))
+      set should have size (1)
+      set should contain ('A)
     }
 
     "permit duplicates" in {
@@ -197,4 +197,4 @@ class MultibinderSpec extends WordSpec with Matchers {
     }
   }
 }
-
+// vim: set ts=2 sw=2 :
