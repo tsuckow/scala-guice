@@ -21,6 +21,7 @@ import com.google.inject.binder._
 import java.lang.annotation.{Annotation => JAnnotation}
 import java.lang.reflect.{Constructor => JConstructor}
 import net.codingwell.scalaguice.ScalaModule.{ScalaLinkedBindingBuilder, ScalaScopedBindingBuilder}
+import com.google.inject.name.Names
 
 /**
  * Proxy for [[com.google.inject.binder.ScopedBindingBuilder]]
@@ -67,6 +68,7 @@ trait AnnotatedBindingBuilderProxy[T] extends AnnotatedBindingBuilder[T] with Li
 
   def annotatedWith(annotation: JAnnotation) = newBuilder(self annotatedWith annotation)
   def annotatedWith(annotationType: Class[_ <: JAnnotation]) = newBuilder(self annotatedWith annotationType)
+  def annotatedWithName(name: String) = annotatedWith(Names.named(name))
 
   private[this] def newBuilder(underlying: LinkedBindingBuilder[T]) = new ScalaLinkedBindingBuilder[T] {
     val self = underlying
@@ -81,4 +83,5 @@ trait AnnotatedElementBuilderProxy[T] extends AnnotatedElementBuilder with Proxy
 
   def annotatedWith(annotation: JAnnotation) = self annotatedWith annotation
   def annotatedWith(annotationType: Class[_ <: JAnnotation]) = self annotatedWith annotationType
+  def annotatedWithName(name: String) = annotatedWith(Names.named(name))
 }

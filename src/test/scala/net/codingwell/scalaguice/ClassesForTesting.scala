@@ -15,9 +15,8 @@
  */
 package net.codingwell.scalaguice
 
-import com.google.inject.Inject
-import com.google.inject.Provider
 import com.google.inject.TypeLiteral
+import javax.inject.{Provider, Inject, Named}
 
 object Outer {
   trait A
@@ -67,3 +66,5 @@ class FooProviderWithJavax extends javax.inject.Provider[Foo] {
     def foo() = "foo"
   }
 }
+
+case class TwoStrings @Inject()(@Named("first") first: String, @Named("second") second: String)
