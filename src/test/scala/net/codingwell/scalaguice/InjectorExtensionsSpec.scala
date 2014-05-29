@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010-2011 Benjamin Lings
+ *  Copyright 2010-2014 Benjamin Lings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,12 @@
  */
 package net.codingwell.scalaguice
 
-import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, WordSpec}
 
 import com.google.inject._
 import com.google.inject.name.Names.named
 
-class InjectorExtensionsSpec extends WordSpec with ShouldMatchers {
+class InjectorExtensionsSpec extends WordSpec with Matchers {
 
   import InjectorExtensions._
 

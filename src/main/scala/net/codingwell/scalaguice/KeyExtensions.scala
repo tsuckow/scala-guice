@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010-2011 Benjamin Lings
+ *  Copyright 2010-2014 Benjamin Lings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,15 @@
 package net.codingwell.scalaguice
 
 import com.google.inject._
+import java.lang.annotation.{Annotation => JAnnotation}
+import com.google.inject.name.Names
 
 object KeyExtensions {
 
-  import java.lang.annotation.{Annotation => JAnnotation}
-
-  implicit def enrichTypeLiteral[T](t: TypeLiteral[T]) = new {
+  implicit class ScalaTypeLiteral[T](t: TypeLiteral[T]) {
     def toKey: Key[T] = Key.get(t)
     def annotatedWith(annotation: JAnnotation): Key[T] = Key.get(t, annotation)
     def annotatedWith[TAnn <: JAnnotation : Manifest]: Key[T] = Key.get(t, cls[TAnn])
+    def annotatedWithName(name: String) = annotatedWith(Names.named(name))
   }
 }

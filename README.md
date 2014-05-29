@@ -6,30 +6,31 @@ Scala extensions for Google Guice 4.0
 
 Please submit pull requests against the **develop** branch.
 
+**Note: Multibinding behaviour had changed in beta4, duplicates are now ignored instead of throwing an exception.**
+
 Getting Started
 ---------------
 
 ### Add dependency
-We currently support Scala `2.8.2, 2.9.1, 2.9.2, 2.9.3, 2.10`
+We currently support Scala `2.10, 2.11`
 
 ##### maven:
 ```xml
 <dependency>
     <groupId>net.codingwell</groupId>
     <artifactId>scala-guice_2.10</artifactId>
-    <version>4.0.0-beta</version>
+    <version>4.0.0-beta4</version>
 </dependency>
 ```
 
 #####sbt:
 ```scala
-"net.codingwell" % "scala-guice_2.10" % "4.0.0-beta"
-"net.codingwell" %% "scala-guice" % "4.0.0-beta"
+"net.codingwell" %% "scala-guice" % "4.0.0-beta4"
 ```
 
 ##### gradle:
 ```groovy
-'net.codingwell:scala-guice_2.10:4.0.0-beta'
+'net.codingwell:scala-guice_2.10:4.0.0-beta4'
 ```
 
 ### Mixin
@@ -94,6 +95,7 @@ bind[A].to(typeLiteral[B])
 bind[A].toInstance("A")
 bind[A].annotatedWith[Ann].to[B]
 bind[A].annotatedWith( Names.named("name") ).to[B]
+bind[A].annotatedWithName("name").to[B]
 bind[A].toProvider[BProvider]
 bind[A].toProvider[TypeProvider[B]]
 bind[A[String]].to[B[String]]

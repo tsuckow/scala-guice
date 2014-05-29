@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010-2011 Benjamin Lings
+ *  Copyright 2010-2014 Benjamin Lings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.google.inject.binder._
 import java.lang.annotation.{Annotation => JAnnotation}
 import java.lang.reflect.{Constructor => JConstructor}
 import net.codingwell.scalaguice.ScalaModule.{ScalaLinkedBindingBuilder, ScalaScopedBindingBuilder}
+import com.google.inject.name.Names
 
 /**
  * Proxy for [[com.google.inject.binder.ScopedBindingBuilder]]
@@ -49,6 +50,7 @@ trait LinkedBindingBuilderProxy[T] extends LinkedBindingBuilder[T] with ScopedBi
   override def toConstructor[S <: T](constructor:JConstructor[S]) = newBuilder(self toConstructor constructor)
   override def toConstructor[S <: T](constructor:JConstructor[S], literal:TypeLiteral[_ <: S]) = newBuilder(self toConstructor(constructor,literal))
   override def toProvider(provider: Provider[_ <: T]) = newBuilder(self toProvider provider)
+  override def toProvider(provider: javax.inject.Provider[_ <: T]) = newBuilder(self toProvider provider)
   override def toProvider(provider: Class[_ <: javax.inject.Provider[_ <: T]]) = newBuilder(self toProvider provider)
   override def toProvider(provider: TypeLiteral[_ <: javax.inject.Provider[_ <: T]]) = newBuilder(self toProvider provider)
   override def toProvider(providerKey: Key[_ <: javax.inject.Provider[_ <: T]]) = newBuilder(self toProvider providerKey)
@@ -66,6 +68,7 @@ trait AnnotatedBindingBuilderProxy[T] extends AnnotatedBindingBuilder[T] with Li
 
   def annotatedWith(annotation: JAnnotation) = newBuilder(self annotatedWith annotation)
   def annotatedWith(annotationType: Class[_ <: JAnnotation]) = newBuilder(self annotatedWith annotationType)
+  def annotatedWithName(name: String) = annotatedWith(Names.named(name))
 
   private[this] def newBuilder(underlying: LinkedBindingBuilder[T]) = new ScalaLinkedBindingBuilder[T] {
     val self = underlying
@@ -80,4 +83,5 @@ trait AnnotatedElementBuilderProxy[T] extends AnnotatedElementBuilder with Proxy
 
   def annotatedWith(annotation: JAnnotation) = self annotatedWith annotation
   def annotatedWith(annotationType: Class[_ <: JAnnotation]) = self annotatedWith annotationType
+  def annotatedWithName(name: String) = annotatedWith(Names.named(name))
 }

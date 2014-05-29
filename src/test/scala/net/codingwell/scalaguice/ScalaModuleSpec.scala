@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010-2011 Benjamin Lings
+ *  Copyright 2010-2014 Benjamin Lings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,11 @@
  */
 package net.codingwell.scalaguice
 
-import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, WordSpec}
 
 import com.google.inject._
 
-class ScalaModuleSpec extends WordSpec with ShouldMatchers {
+class ScalaModuleSpec extends WordSpec with Matchers {
 
   "A Scala Guice module" should {
 
@@ -88,6 +87,15 @@ class ScalaModuleSpec extends WordSpec with ShouldMatchers {
       Guice.createInjector(module).getInstance(Key.get(classOf[A],classOf[Named]))
     }
 
+    "allow use provider form javax.inject.Provider" in {
+      val module = new AbstractModule with ScalaModule {
+        def configure() {
+          bind[Foo].toProvider[FooProviderWithJavax]
+        }
+      }
+      Guice.createInjector(module).getInstance(classOf[Foo])
+    }
+
     "give a useful error when bound on itself" in {
       val module = new AbstractModule with ScalaModule {
         def configure() = {
@@ -101,6 +109,19 @@ class ScalaModuleSpec extends WordSpec with ShouldMatchers {
       assert( messages.size == 1 )
       val sources = messages.iterator.next.getSource
       assert( sources.contains("ScalaModuleSpec.scala") )
+    }
+
+    "allow use annotatedWithName" in {
+      import net.codingwell.scalaguice.BindingExtensions._
+      val module = new AbstractModule with ScalaModule {
+        def configure() = {
+          bind[String].annotatedWithName("first").toInstance("first")
+          bindConstant().annotatedWithName("second").to("second")
+        }
+      }
+      val twoStrings = Guice.createInjector(module).getInstance(classOf[TwoStrings])
+      twoStrings.first should be ("first")
+      twoStrings.second should be ("second")
     }
   }
 

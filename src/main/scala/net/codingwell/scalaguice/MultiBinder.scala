@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 Benjamin Lings
+ *  Copyright 2010-2014 Benjamin Lings
  *  Author: Thomas Suckow
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010-2011 Benjamin Lings
+ *  Copyright 2010-2014 Benjamin Lings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  */
 package net.codingwell.scalaguice
 
-import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{Matchers, WordSpec}
 
 import com.google.inject._
 import com.google.inject.name._
@@ -25,7 +24,7 @@ import java.util.{Set => JSet, HashSet => JHashSet}
 
 import scala.collection.{ immutable => im }
 
-class MultibinderSpec extends WordSpec with ShouldMatchers {
+class MultibinderSpec extends WordSpec with Matchers {
 
   "A multibinder" should {
 //  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Annotation ) = {
@@ -123,7 +122,7 @@ class MultibinderSpec extends WordSpec with ShouldMatchers {
       set should contain ("B")
     }
 
-    "not permit duplicates" in {
+    "deduplicate" in {
       import name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
@@ -132,9 +131,9 @@ class MultibinderSpec extends WordSpec with ShouldMatchers {
           multi.addBinding.toInstance('A)
         }
       }
-      intercept[ProvisionException] {
-        val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[Symbol]] ))
-      }
+      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[Symbol]] ))
+      set should have size (1)
+      set should contain ('A)
     }
 
     "permit duplicates" in {
@@ -198,4 +197,4 @@ class MultibinderSpec extends WordSpec with ShouldMatchers {
     }
   }
 }
-
+// vim: set ts=2 sw=2 :

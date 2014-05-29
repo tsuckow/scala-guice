@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010-2011 Benjamin Lings
+ *  Copyright 2010-2014 Benjamin Lings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,14 @@
  */
 package net.codingwell.scalaguice
 
-import com.google.inject._
+import com.google.inject.{PrivateModule, PrivateBinder, Binder, Scope, AbstractModule}
 import binder._
 import java.lang.annotation.Annotation
+import javax.inject.Provider
 
 /**
  * Allows binding via type parameters. Mix into <code>AbstractModule</code>
- *  (or subclass) to allow using a type parameter instead of
+ * (or subclass) to allow using a type parameter instead of
  * <code>classOf[Foo]</code> or <code>new TypeLiteral[Bar[Foo]] {}</code>.
  *
  * For example, instead of
@@ -76,7 +77,7 @@ trait ScalaModule extends AbstractModule with InternalModule[Binder] {
   //Hack, no easy way to exclude the bind method that gets added to classes inheriting ScalaModule
   //So we experimentally figured out how many calls up is the source, so we use that
   //Commit 52c2e92f8f6131e4a9ea473f58be3e32cd172ce6 has better class exclusion
-  protected[this] def binderAccess = super.binder.withSource( (new Throwable).getStackTrace()(4) ) // should not need super
+  protected[this] def binderAccess = super.binder.withSource((new Throwable).getStackTrace()(4)) // should not need super
 }
 
 trait ScalaPrivateModule extends PrivateModule with InternalModule[PrivateBinder] {
@@ -89,11 +90,11 @@ trait ScalaPrivateModule extends PrivateModule with InternalModule[PrivateBinder
   //Hack, no easy way to exclude the bind method that gets added to classes inheriting ScalaModule
   //So we experimentally figured out how many calls up is the source, so we use that
   //Commit 52c2e92f8f6131e4a9ea473f58be3e32cd172ce6 has better class exclusion
-  protected[this] def binderAccess = super.binder.withSource( (new Throwable).getStackTrace()(5) ) // should not need super
+  protected[this] def binderAccess = super.binder.withSource((new Throwable).getStackTrace()(5)) // should not need super
 
   protected[this] def expose[T: Manifest] = new ScalaAnnotatedElementBuilder[T] {
-     val myBinder = binderAccess
-     val self = myBinder.expose(typeLiteral[T])
+    val myBinder = binderAccess
+    val self = myBinder.expose(typeLiteral[T])
   }
 }
 
@@ -104,18 +105,17 @@ object ScalaModule {
     def in[TAnn <: JAnnotation : Manifest]() = self in cls[TAnn]
   }
 
-  trait ScalaLinkedBindingBuilder[T] extends ScalaScopedBindingBuilder
-    with LinkedBindingBuilderProxy[T] { outer =>
+  trait ScalaLinkedBindingBuilder[T] extends ScalaScopedBindingBuilder with LinkedBindingBuilderProxy[T] { outer =>
     def to[TImpl <: T : Manifest] = new ScalaScopedBindingBuilder {
       val self = outer.self to typeLiteral[TImpl]
     }
+
     def toProvider[TProvider <: Provider[_ <: T] : Manifest] = new ScalaScopedBindingBuilder {
       val self = outer.self toProvider typeLiteral[TProvider]
     }
   }
 
-  trait ScalaAnnotatedBindingBuilder[T] extends ScalaLinkedBindingBuilder[T]
-    with AnnotatedBindingBuilderProxy[T] { outer =>
+  trait ScalaAnnotatedBindingBuilder[T] extends ScalaLinkedBindingBuilder[T] with AnnotatedBindingBuilderProxy[T] { outer =>
     def annotatedWith[TAnn <: JAnnotation : Manifest] = new ScalaLinkedBindingBuilder[T] {
       val self = outer.self annotatedWith cls[TAnn]
     }
