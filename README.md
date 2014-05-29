@@ -6,6 +6,8 @@ Scala extensions for Google Guice 4.0
 
 Please submit pull requests against the **develop** branch.
 
+**Note: Multibinding behaviour had changed in beta4, duplicates are now ignored instead of throwing an exception.**
+
 Getting Started
 ---------------
 
@@ -93,6 +95,7 @@ bind[A].to(typeLiteral[B])
 bind[A].toInstance("A")
 bind[A].annotatedWith[Ann].to[B]
 bind[A].annotatedWith( Names.named("name") ).to[B]
+bind[A].annotatedWithName("name").to[B]
 bind[A].toProvider[BProvider]
 bind[A].toProvider[TypeProvider[B]]
 bind[A[String]].to[B[String]]
