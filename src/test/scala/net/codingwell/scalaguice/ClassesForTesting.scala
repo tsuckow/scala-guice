@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010-2011 Benjamin Lings
+ *  Copyright 2010-2014 Benjamin Lings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,8 @@
  */
 package net.codingwell.scalaguice
 
-import com.google.inject.Inject
-import com.google.inject.Provider
 import com.google.inject.TypeLiteral
+import javax.inject.{Provider, Inject, Named}
 
 object Outer {
   trait A
@@ -67,3 +66,5 @@ class FooProviderWithJavax extends javax.inject.Provider[Foo] {
     def foo() = "foo"
   }
 }
+
+case class TwoStrings @Inject()(@Named("first") first: String, @Named("second") second: String)

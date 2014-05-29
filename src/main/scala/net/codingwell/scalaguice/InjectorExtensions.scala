@@ -1,5 +1,5 @@
 /*
- *  Copyright 2010-2011 Benjamin Lings
+ *  Copyright 2010-2014 Benjamin Lings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,11 @@
 package net.codingwell.scalaguice
 
 import com.google.inject.Injector
+import KeyExtensions._
 
 object InjectorExtensions {
 
-  import KeyExtensions._
-
-  class ScalaInjector(i:Injector) {
+  implicit class ScalaInjector(i:Injector) {
     def instance[T : Manifest] = i.getInstance(typeLiteral[T].toKey)
   }
-
-  implicit def enrichInjector(i:Injector) = new ScalaInjector(i)
 }
