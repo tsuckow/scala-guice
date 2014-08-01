@@ -66,7 +66,7 @@ object MyServer {
   def main(args: Array[String]) {
     val injector = Guice.createInjector(new MyModule(), new MyPrivateModule)
 
-    import net.codingwell.scalaguice.ScalaExtensons._
+    import net.codingwell.scalaguice.InjectorExtensions._
     val service = injector.instance[Service]
     val foo = injector.instance[Foo]
     ...
