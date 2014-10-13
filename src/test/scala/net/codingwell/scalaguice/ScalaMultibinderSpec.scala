@@ -15,186 +15,294 @@
  */
 package net.codingwell.scalaguice
 
+import com.google.inject.name.{Named, Names}
+import com.google.inject.{AbstractModule, Guice}
+import net.codingwell.scalaguice.InjectorExtensions._
 import org.scalatest.{Matchers, WordSpec}
 
-import com.google.inject._
-import com.google.inject.name._
-
-import java.util.{Set => JSet, HashSet => JHashSet}
-
-import scala.collection.{ immutable => im }
+import scala.collection.{immutable => im}
 
 class ScalaMultibinderSpec extends WordSpec with Matchers {
+  private case class W[T](t: T)
+  private val annotation = Names.named("N")
 
   "A multibinder" should {
-//  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Annotation ) = {
-//  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Annotation ) = {
-//  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Class[_ <: Annotation] ) = {
-//  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Class[_ <: Annotation] ) = {
 
     "bind [TypeLiteral]" in {
-      import name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
-          val multi = ScalaMultibinder.newSetBinder( binder, typeLiteral[String] )
+          val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[String])
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]] ))
-      set should have size (2)
-      set should contain ("A")
-      set should contain ("B")
+      validate(Guice.createInjector(module).instance[im.Set[String]], "A", "B")
     }
 
     "bind [Class]" in {
-      import name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
-          val multi = ScalaMultibinder.newSetBinder( binder, classOf[String] )
+          val multi = ScalaMultibinder.newSetBinder(binder, classOf[String])
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]] ))
-      set should have size (2)
-      set should contain ("A")
-      set should contain ("B")
+      validate(Guice.createInjector(module).instance[im.Set[String]], "A", "B")
     }
 
     "bind [TypeLiteral, Annotation]" in {
-      import name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
-          val multi = ScalaMultibinder.newSetBinder( binder, typeLiteral[String], Names.named("bla") )
+          val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[String], annotation)
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]], Names.named("bla") ))
-      set should have size (2)
-      set should contain ("A")
-      set should contain ("B")
+      validate(Guice.createInjector(module).instance[im.Set[String]](annotation), "A", "B")
     }
 
     "bind [Class, Annotation]" in {
-      import name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
-          val multi = ScalaMultibinder.newSetBinder( binder, classOf[String], Names.named("bla") )
+          val multi = ScalaMultibinder.newSetBinder(binder, classOf[String], annotation)
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]], Names.named("bla") ))
-      set should have size (2)
-      set should contain ("A")
-      set should contain ("B")
+      validate(Guice.createInjector(module).instance[im.Set[String]](annotation), "A", "B")
     }
 
-    "bind [TypeLiteral, ClassAnotation]" in {
-      import name.Named
+    "bind [TypeLiteral, ClassAnnotation]" in {
+      import com.google.inject.name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
-          val multi = ScalaMultibinder.newSetBinder( binder, typeLiteral[String], classOf[Named] )
+          val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[String], classOf[Named])
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]], classOf[Named] ))
-      set should have size (2)
-      set should contain ("A")
-      set should contain ("B")
+      validate(Guice.createInjector(module).instance[im.Set[String], Named], "A", "B")
     }
 
     "bind [Class, ClassAnnotation]" in {
-      import name.Named
+      import com.google.inject.name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
-          val multi = ScalaMultibinder.newSetBinder( binder, classOf[String], classOf[Named] )
+          val multi = ScalaMultibinder.newSetBinder(binder, classOf[String], classOf[Named])
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]], classOf[Named] ))
-      set should have size (2)
-      set should contain ("A")
-      set should contain ("B")
+      validate(Guice.createInjector(module).instance[im.Set[String], Named], "A", "B")
     }
 
     "deduplicate" in {
-      import name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
-          val multi = ScalaMultibinder.newSetBinder( binder, typeLiteral[Symbol] )
+          val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[Symbol])
           multi.addBinding.toInstance('A)
           multi.addBinding.toInstance('A)
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[Symbol]] ))
-      set should have size (1)
-      set should contain ('A)
+      validate(Guice.createInjector(module).instance[im.Set[Symbol]], 'A)
     }
 
     "permit duplicates" in {
-      import name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
-          val multi = ScalaMultibinder.newSetBinder( binder, typeLiteral[Symbol] ).permitDuplicates()
+          val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[Symbol]).permitDuplicates()
           multi.addBinding.toInstance('A)
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[Symbol]] ))
-      set should have size (1)
-      set should contain ('A)
+      validate(Guice.createInjector(module).instance[im.Set[Symbol]], 'A)
     }
 
-    //Scala Addons
+    "bind from multiple modules" in {
+      def newModule(i: Int) = new AbstractModule with ScalaModule {
+        override def configure(): Unit = {
+          val multi = ScalaMultibinder.newSetBinder[Int](binder)
+          multi.addBinding.toInstance(i)
+        }
+      }
+      validate(Guice.createInjector(newModule(1), newModule(2)).instance[im.Set[Int]], 1, 2)
+    }
+
+    "bind deep parameterization in [Class]" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          val mbStrings = ScalaMultibinder.newSetBinder(binder, classOf[W[String]])
+          mbStrings.addBinding.toInstance(W("A"))
+          val mbInts = ScalaMultibinder.newSetBinder(binder, classOf[W[Int]])
+          mbInts.addBinding.toInstance(W(1))
+        }
+      }
+
+      val injector = Guice.createInjector(module)
+      validate(injector.instance[im.Set[W[String]]], W("A"))
+      validate(injector.instance[im.Set[W[Int]]], W(1))
+    }
+
+    "bind deep parameterization in [Class, Annotation]" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          val mbStrings = ScalaMultibinder.newSetBinder(binder, classOf[W[String]], annotation)
+          mbStrings.addBinding.toInstance(W("A"))
+          val mbInts = ScalaMultibinder.newSetBinder(binder, classOf[W[Int]], annotation)
+          mbInts.addBinding.toInstance(W(1))
+        }
+      }
+
+      val injector = Guice.createInjector(module)
+      validate(injector.instance[im.Set[W[String]]](annotation), W("A"))
+      validate(injector.instance[im.Set[W[Int]]](annotation), W(1))
+    }
+
+    "bind deep parameterization in [Class, ClassAnnotation]" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          val mbStrings = ScalaMultibinder.newSetBinder(binder, classOf[W[String]], classOf[Named])
+          mbStrings.addBinding.toInstance(W("A"))
+          val mbInts = ScalaMultibinder.newSetBinder(binder, classOf[W[Int]], classOf[Named])
+          mbInts.addBinding.toInstance(W(1))
+        }
+      }
+
+      val injector = Guice.createInjector(module)
+      validate(injector.instance[im.Set[W[String]], Named], W("A"))
+      validate(injector.instance[im.Set[W[Int]], Named], W(1))
+    }
+
+    "bind deep parameterization in [TypeLiteral]" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          val mbStrings = ScalaMultibinder.newSetBinder(binder, typeLiteral[W[String]])
+          mbStrings.addBinding.toInstance(W("A"))
+          val mbInts = ScalaMultibinder.newSetBinder(binder, typeLiteral[W[Int]])
+          mbInts.addBinding.toInstance(W(1))
+        }
+      }
+
+      val injector = Guice.createInjector(module)
+      validate(injector.instance[im.Set[W[String]]], W("A"))
+      validate(injector.instance[im.Set[W[Int]]], W(1))
+    }
+
+    "bind deep parameterization in [typeLiteral, Annotation]" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          val mbStrings = ScalaMultibinder.newSetBinder(binder, typeLiteral[W[String]], annotation)
+          mbStrings.addBinding.toInstance(W("A"))
+          val mbInts = ScalaMultibinder.newSetBinder(binder, typeLiteral[W[Int]], annotation)
+          mbInts.addBinding.toInstance(W(1))
+        }
+      }
+
+      val injector = Guice.createInjector(module)
+      validate(injector.instance[im.Set[W[String]]](annotation), W("A"))
+      validate(injector.instance[im.Set[W[Int]]](annotation), W(1))
+    }
+
+    "bind deep parameterization in [TypeLiteral, ClassAnnotation]" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          val mbStrings = ScalaMultibinder.newSetBinder(binder, typeLiteral[W[String]], classOf[Named])
+          mbStrings.addBinding.toInstance(W("A"))
+          val mbInts = ScalaMultibinder.newSetBinder(binder, typeLiteral[W[Int]], classOf[Named])
+          mbInts.addBinding.toInstance(W(1))
+        }
+      }
+
+      val injector = Guice.createInjector(module)
+      validate(injector.instance[im.Set[W[String]], Named], W("A"))
+      validate(injector.instance[im.Set[W[Int]], Named], W(1))
+    }
+
+    /** Scala Addons */
 
     "bind [T]" in {
-      import name.Named
       val module = new AbstractModule with ScalaModule {
-        def configure = {
-          val multi = ScalaMultibinder.newSetBinder[String]( binder )
+        def configure() = {
+          val multi = ScalaMultibinder.newSetBinder[String](binder)
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]] ))
-      set should have size (2)
-      set should contain ("A")
-      set should contain ("B")
+      validate(Guice.createInjector(module).instance[im.Set[String]], "A", "B")
     }
 
     "bind [T, Ann]" in {
-      import name.Named
+      import com.google.inject.name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
-          val multi = ScalaMultibinder.newSetBinder[String,Named]( binder )
+          val multi = ScalaMultibinder.newSetBinder[String, Named](binder)
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]], classOf[Named] ))
-      set should have size (2)
-      set should contain ("A")
-      set should contain ("B")
+      validate(Guice.createInjector(module).instance[im.Set[String], Named], "A", "B")
     }
 
     "bind [T](Ann)" in {
-      import name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
-          val multi = ScalaMultibinder.newSetBinder[String]( binder, Names.named("bla") )
+          val multi = ScalaMultibinder.newSetBinder[String](binder, annotation)
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
         }
       }
-      val set = Guice.createInjector(module).getInstance( Key.get( typeLiteral[im.Set[String]], Names.named("bla") ))
-      set should have size (2)
-      set should contain ("A")
-      set should contain ("B")
+      validate(Guice.createInjector(module).instance[im.Set[String]](annotation), "A", "B")
+    }
+
+    "bind deep parameterization in [T]" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          val mbStrings = ScalaMultibinder.newSetBinder[W[String]](binder)
+          mbStrings.addBinding.toInstance(W("A"))
+          val mbInts = ScalaMultibinder.newSetBinder[W[Int]](binder)
+          mbInts.addBinding.toInstance(W(1))
+        }
+      }
+
+      val injector = Guice.createInjector(module)
+      validate(injector.instance[im.Set[W[String]]], W("A"))
+      validate(injector.instance[im.Set[W[Int]]], W(1))
+    }
+
+    "bind deep parameterization in [T, Ann]" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          val mbStrings = ScalaMultibinder.newSetBinder[W[String], Named](binder)
+          mbStrings.addBinding.toInstance(W("A"))
+          val mbInts = ScalaMultibinder.newSetBinder[W[Int], Named](binder)
+          mbInts.addBinding.toInstance(W(1))
+        }
+      }
+
+      val injector = Guice.createInjector(module)
+      validate(injector.instance[im.Set[W[String]], Named], W("A"))
+      validate(injector.instance[im.Set[W[Int]], Named], W(1))
+    }
+
+    "bind deep parameterization in [T](annotation)" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          val mbStrings = ScalaMultibinder.newSetBinder[W[String]](binder, annotation)
+          mbStrings.addBinding.toInstance(W("A"))
+          val mbInts = ScalaMultibinder.newSetBinder[W[Int]](binder, annotation)
+          mbInts.addBinding.toInstance(W(1))
+        }
+      }
+
+      val injector = Guice.createInjector(module)
+      validate(injector.instance[im.Set[W[String]]](annotation), W("A"))
+      validate(injector.instance[im.Set[W[Int]]](annotation), W(1))
+    }
+  }
+
+  private def validate[T](set: Set[T], expected: T*) {
+    set should have size expected.length
+    for (e <- expected) {
+      set should contain(e)
     }
   }
 }
-// vim: set ts=2 sw=2 :

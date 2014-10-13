@@ -16,137 +16,200 @@
  */
 package net.codingwell.scalaguice
 
-import com.google.inject._
-import com.google.inject.multibindings._
-
 import java.lang.annotation.Annotation
 import java.util.{Set => JSet}
 
-import scala.collection.{ immutable => im }
+import com.google.inject.multibindings.Multibinder
+import com.google.inject.{Binder, Key, Module, TypeLiteral}
+import net.codingwell.scalaguice.ScalaModule.ScalaLinkedBindingBuilder
+
+import scala.collection.{immutable => im}
 
 /**
- * Analog to the Guice Multibinder
+ * Analog to Guice's Multibinder
  *
- * Use {@code newSetBinder} to create a multibinder instance
-*/
-object ScalaMultibinder {
+ * Use [[ScalaMultibinder.newSetBinder]] to create a multibinder that is scala friendly.
+ */
+sealed trait ScalaMultibinder[T] {
   /**
-   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
-   * itself bound with no binding annotation.
+   * Configures the bound set to silently discard duplicate elements. When multiple equal values are
+   * bound, the one that gets included is arbitrary. When multiple modules contribute elements to
+   * the set, this configuration option impacts all of them.
+   *
+   * @return this multibinder
+   * @since 3.0
    */
-  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T] ) = {
-    val myBinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
-    val result = Multibinder.newSetBinder( myBinder, settype )
-    binder.bind( Key.get( typeLiteral[im.Set[T]] ) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]] ) ) )
-    new ScalaMultibinder( binder, result )
-  }
+  def permitDuplicates(): ScalaMultibinder[T]
 
   /**
-   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
-   * itself bound with no binding annotation.
+   * Returns a binding builder used to add a new element in the set. Each
+   * bound element must have a distinct value. Bound providers will be
+   * evaluated each time the set is injected.
+   *
+   * <p>It is an error to call this method without also calling one of the
+   * `to` methods on the returned binding builder.
+   *
+   * <p>Scoping elements independently is supported. Use the `in` method
+   * to specify a binding scope.
    */
-  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T] ) = {
-    val myBinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
-    val result = Multibinder.newSetBinder( myBinder, settype )
-    binder.bind( Key.get( typeLiteral[im.Set[T]] ) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]] ) ) )
-    new ScalaMultibinder( binder, result )
-  }
-
-  /**
-   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
-   * itself bound with a binding annotation.
-   */
-  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Annotation ) = {
-    val myBinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
-    val result = Multibinder.newSetBinder( myBinder, settype, annotation )
-    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
-    new ScalaMultibinder( binder, result )
-  }
-
-  /**
-   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
-   * itself bound with a binding annotation.
-   */
-  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Annotation ) = {
-    val myBinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
-    val result = Multibinder.newSetBinder( myBinder, settype, annotation )
-    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
-    new ScalaMultibinder( binder, result )
-  }
-
-  /**
-   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
-   * itself bound with a binding annotation.
-   */
-  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Class[_ <: Annotation] ) = {
-    val myBinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
-    val result = Multibinder.newSetBinder( myBinder, settype, annotation )
-    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
-    new ScalaMultibinder( binder, result )
-  }
-
-  /**
-   * Returns a new multibinder that collects instances of {@code settype} in a [[scala.collection.immutable.Set]] that is
-   * itself bound with a binding annotation.
-   */
-  def newSetBinder[T : Manifest]( binder:Binder, settype:Class[T], annotation:Class[_ <: Annotation] ) = {
-    val myBinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
-    val result = Multibinder.newSetBinder( myBinder, settype, annotation )
-    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
-    new ScalaMultibinder( binder, result )
-  }
-
-  /**
-   * Returns a new multibinder that collects instances of type {@code T} in a [[scala.collection.immutable.Set]] that is
-   * itself bound with no binding annotation.
-   */
-  def newSetBinder[T : Manifest]( binder:Binder ) = {
-    val myBinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
-    val result = Multibinder.newSetBinder( myBinder, typeLiteral[T] )
-    binder.bind( Key.get( typeLiteral[im.Set[T]] ) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]] ) ) )
-    new ScalaMultibinder( binder, result )
-  }
-
-  /**
-   * Returns a new multibinder that collects instances of type {@code T} in a [[scala.collection.immutable.Set]] that is
-   * itself bound with a binding annotation.
-   */
-  def newSetBinder[T : Manifest]( binder:Binder, annotation:Annotation ) = {
-    val myBinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
-    val result = Multibinder.newSetBinder( myBinder, typeLiteral[T], annotation )
-    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
-    new ScalaMultibinder( binder, result )
-  }
-
-  /**
-   * Returns a new multibinder that collects instances of type {@code T} in a [[scala.collection.immutable.Set]] that is
-   * itself bound with a binding annotation {@code Ann}.
-   */
-  def newSetBinder[T : Manifest, Ann <: Annotation : Manifest]( binder:Binder ) = {
-    val myBinder = binder.skipSources( classOf[ScalaMultibinder[T]] )
-    val annotation = manifest[Ann].erasure.asInstanceOf[Class[Ann]]
-    val result = Multibinder.newSetBinder( myBinder, typeLiteral[T], annotation )
-    binder.bind( Key.get( typeLiteral[im.Set[T]], annotation) ).toProvider( new SetProvider[T]( Key.get( typeLiteral[JSet[T]], annotation ) ) )
-    new ScalaMultibinder( binder, result )
-  }
+  def addBinding: ScalaLinkedBindingBuilder[T]
 }
 
-/**
- * Analog to the Guice Multibinder
- */
-class ScalaMultibinder[T : Manifest]( binder:Binder, multibinder:Multibinder[T] ) {
-  def addBinding() = {
-    new ScalaModule.ScalaLinkedBindingBuilder[T] {
-      val self = multibinder.addBinding()
+object ScalaMultibinder {
+  /** Preferred Scala Methods */
+
+  /**
+   * Returns a new multibinder that collects instances of type [[T]] in a [[scala.collection.immutable.Set]] that is
+   * itself bound with no binding annotation.
+   */
+  def newSetBinder[T: Manifest](binder: Binder) = {
+    newMultibinder(binder, typeLiteral[T])
+  }
+
+  /**
+   * Returns a new multibinder that collects instances of type [[T]] in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation [[Ann]].
+   */
+  def newSetBinder[T: Manifest, Ann <: Annotation : Manifest](binder: Binder) = {
+    newMultibinder[T, Ann](binder, typeLiteral[T], cls[Ann])
+  }
+
+  /**
+   * Returns a new multibinder that collects instances of type [[T]] in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation.
+   */
+  def newSetBinder[T: Manifest](binder: Binder, annotation: Annotation) = {
+    newMultibinder(binder, typeLiteral[T], annotation)
+  }
+
+  /** Methods Compatible w/Guice's API */
+
+  /**
+   * Returns a new multibinder that collects instances of `typ` in a [[scala.collection.immutable.Set]] that is
+   * itself bound with no binding annotation.
+   */
+  def newSetBinder[T](binder: Binder, typ: TypeLiteral[T]) = {
+    newMultibinder(binder, typ)
+  }
+
+  /**
+   * Returns a new multibinder that collects instances of `typ` in a [[scala.collection.immutable.Set]] that is
+   * itself bound with no binding annotation. Note that `typ` is ignored in favor of using the [[T]] Manifest to capture
+   * type arguments.
+   */
+  def newSetBinder[T: Manifest](binder: Binder, typ: Class[T]) = {
+    newMultibinder(binder, typeLiteral[T])
+  }
+
+  /**
+   * Returns a new multibinder that collects instances of `typ` in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation.
+   */
+  def newSetBinder[T: Manifest](binder: Binder, typ: TypeLiteral[T], annotation: Annotation) = {
+    newMultibinder(binder, typ, annotation)
+  }
+
+  /**
+   * Returns a new multibinder that collects instances of `typ` in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation. Note that `typ` is ignored in favor of using the Manifest to capture
+   * type arguments.
+   */
+  def newSetBinder[T: Manifest](binder: Binder, typ: Class[T], annotation: Annotation) = {
+    newMultibinder(binder, typeLiteral[T], annotation)
+  }
+
+  /**
+   * Returns a new multibinder that collects instances of `typ` in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation.
+   */
+  def newSetBinder[T](binder: Binder, typ: TypeLiteral[T], annotation: Class[_ <: Annotation]) = {
+    newMultibinder(binder, typ, annotation)
+  }
+
+  /**
+   * Returns a new multibinder that collects instances of `typ` in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation. Note that `typ` is ignored in favor of using the Manifest to capture
+   * type arguments.
+   */
+  def newSetBinder[T: Manifest](binder: Binder, typ: Class[T], annotation: Class[_ <: Annotation]) = {
+    newMultibinder(binder, typeLiteral[T], annotation)
+  }
+
+  /** Implementation Details */
+
+  private def newMultibinder[T](parentBinder: Binder, typ: TypeLiteral[T]): ScalaMultibinder[T] = {
+    val binder = skipSources(parentBinder)
+    val jMultibinder = Multibinder.newSetBinder(binder, typ)
+    newMultibinder(binder, jMultibinder, Key.get(typ))
+  }
+
+  private def newMultibinder[T](parentBinder: Binder, typ: TypeLiteral[T], annotation: Annotation): ScalaMultibinder[T] = {
+    val binder = skipSources(parentBinder)
+    val jMultibinder = Multibinder.newSetBinder(binder, typ, annotation)
+    newMultibinder(binder, jMultibinder, Key.get(typ, annotation))
+  }
+
+  private def newMultibinder[T, Ann <: Annotation](parentBinder: Binder, typ: TypeLiteral[T], annotationType: Class[Ann]): ScalaMultibinder[T] = {
+    val binder = skipSources(parentBinder)
+    val jMultibinder = Multibinder.newSetBinder(binder, typ, annotationType)
+    newMultibinder(binder, jMultibinder, Key.get(typ, annotationType))
+  }
+
+  private def newMultibinder[T](binder: Binder, parent: Multibinder[T], key: Key[T]): ScalaMultibinder[T] = {
+    val result = new RealScalaMultibinder[T](parent, key)
+    binder.install(result)
+    result
+  }
+
+  private def skipSources(binder: Binder): Binder = {
+    binder.skipSources(
+      ScalaMultibinder.getClass,
+      classOf[ScalaMultibinder[_]],
+      classOf[RealScalaMultibinder[_]]
+    )
+  }
+
+  /**
+   * Analog to the Guice's [[com.google.inject.multibindings.Multibinder.RealMultibinder]]
+   *
+   * As a Module, the [[RealScalaMultibinder]] installs the binding to the set itself. As a module, this implements
+   * `equals()` and `hashCode()` in order to trick Guice into executing its `configure` method only once. That makes
+   * it so that multiple binders can be created for the same target collection, but only one is bound. The binding maps
+   * the [[java.util.Set]] to a [[im.Set]] for useful Scala injection.
+   */
+  private class RealScalaMultibinder[T](parent: Multibinder[T], key: Key[T]) extends ScalaMultibinder[T] with Module {
+    private val setKey = key.ofType(wrap[im.Set].around(key.getTypeLiteral))
+    private[this] val setName = nameOf(setKey)
+
+    def addBinding: ScalaLinkedBindingBuilder[T] = new ScalaLinkedBindingBuilder[T] {
+      val self = parent.addBinding()
     }
-  }
 
-  def get() = {
-    multibinder
-  }
+    def permitDuplicates(): ScalaMultibinder[T] = {
+      parent.permitDuplicates
+      this
+    }
 
-  def permitDuplicates():ScalaMultibinder[T] = {
-    multibinder.permitDuplicates
-    this
+    def getJavaMultibinder: Multibinder[T] = {
+      parent
+    }
+
+    def configure(binder: Binder) {
+      binder.bind(setKey).toProvider(new SetProvider(key.ofType(wrap[JSet].around(key.getTypeLiteral))))
+    }
+
+    /** Trick Guice into installing this Module once; be careful to not use the jSetKey. */
+    override def equals(o: Any): Boolean = o match {
+      case o: RealScalaMultibinder[_] => o.setKey == setKey
+      case _ => false
+    }
+
+    override def hashCode: Int = {
+      setKey.hashCode
+    }
+
+    override def toString: String = {
+      (if (setName.isEmpty) "" else setName + " ") + "ScalaMultibinder<" + key.getTypeLiteral + ">"
+    }
   }
 }
