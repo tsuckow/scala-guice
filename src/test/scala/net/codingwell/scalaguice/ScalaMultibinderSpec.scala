@@ -24,7 +24,7 @@ import java.util.{Set => JSet, HashSet => JHashSet}
 
 import scala.collection.{ immutable => im }
 
-class MultibinderSpec extends WordSpec with Matchers {
+class ScalaMultibinderSpec extends WordSpec with Matchers {
 
   "A multibinder" should {
 //  def newSetBinder[T : Manifest]( binder:Binder, settype:TypeLiteral[T], annotation:Annotation ) = {
