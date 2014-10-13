@@ -41,7 +41,7 @@ class MyModule extends AbstractModule with ScalaModule {
     bind[Service].to[ServiceImpl].in[Singleton]
     bind[CreditCardPaymentService]
     bind[Bar[Foo]].to[FooBarImpl]
-    bind[PaymentService].to[CreditCardPaymentService]
+    bind[PaymentService].annotatedWith(Names.named("paypal")).to[CreditCardPaymentService]
   }
 }
 
@@ -69,6 +69,12 @@ object MyServer {
     import net.codingwell.scalaguice.InjectorExtensions._
     val service = injector.instance[Service]
     val foo = injector.instance[Foo]
+
+    // Retrieve a Bar annotated with Transactional
+    val bar = injector.instance[Bar, Transactional]
+
+    // Retrieve a PaymentService annotated with a specific Annotation instance.
+    val paymentService = injector.instance[PaymentService](Names.named("paypal"))
     ...
   }
 }
