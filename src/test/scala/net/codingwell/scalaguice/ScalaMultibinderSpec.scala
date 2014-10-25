@@ -73,7 +73,6 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
     }
 
     "bind [TypeLiteral, ClassAnnotation]" in {
-      import com.google.inject.name.Named
       val module = new AbstractModule with ScalaModule {
         def configure() = {
           val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[String], classOf[Named])
