@@ -20,6 +20,8 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.7" % "test"
 
+libraryDependencies += "com.google.code.findbugs" % "jsr305" % "1.3.+" % "compile"
+
 scalaVersion := "2.11.2"
 
 crossScalaVersions := Seq("2.10.4", "2.11.2")
