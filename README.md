@@ -113,10 +113,82 @@ bind[A].to[B].in[Singleton]
 The ScalaMultibinder adds scala style multibindings:
 
 ```scala
-val multi = ScalaMultibinder.newSetBinder[String]( binder )
-multi.addBinding.to[A]
-multi.addBinding.toInstance("A")
+class MyModule extends AbstractModule with ScalaModule {
+  def configure {
+    val stringMulti = ScalaMultibinder.newSetBinder[String](binder)
+    stringMulti.addBinding.toInstance("A")
+
+    val annotatedMulti = ScalaMultibinder.newSetBinder[A, Annotation](binder)
+    annotatedMulti.addBinding.to[A]
+
+    val namedMulti = ScalaMultibinder.newSetBinder[ServiceConfiguration](binder, Names.named("backend"))
+    namedMulti.addBinding.toInstance(config.getAdminServiceConfiguration)
+  }
+}
 ```
+
+And then they may be retrieved as immutable.Set[T]. (examples in order)
+
+```scala
+class StringThing @Inject() (strings: immutable.Set[String]) { ... }
+
+class AThing @Inject() (@Annotation configs: immutable.Set[A]) { ... }
+
+class Service @Inject() (@Names.named("backend") configs: immutable.Set[ServiceConfiguration]) { ... }
+```
+
+### OptionBinding
+
+Newly available in Guice 4.0-beta5, we've got some support for OptionalBinder.
+
+```scala
+class MyModule extends AbstractModule with ScalaModule {
+  def configure {
+    val optBinder = ScalaOptionBinder.newOptionBinder[String](binder)
+    optBinder.setDefault.toInstance("A")
+    // To override the default binding (likely in another module):
+    optBinder.setBinding.toInstance("B")
+
+    val annotatedOptBinder = ScalaOptionBinder.newOptionBinder[A, Annotation](binder)
+    annotatedOptBinder.setDefault.to[A]
+
+    val namedOptBinder = ScalaOptionBinder.newOptionBinder[ServiceConfiguration](binder, Names.named("backend"))
+    namedOptBinder.setBinding.toInstance(config.getAdminServiceConfiguration)
+  }
+}
+```
+
+And then they may be retrieved as `Option[T]`, `Option[Provider[T]]`, and `Option[javax.inject.Provider[T]]`. (examples in order)
+
+```scala
+class StringThing @Inject() (name: Option[String]) { ... }
+
+class AThing @Inject() (@Annotation aProvider: Option[Provider[T]]) { ... }
+
+class Service @Inject() (@Names.named("backend") configProvider: Option[javax.inject.Provider[ServiceConfiguration]]) { ... }
+```
+
+### MapBinding
+
+The ScalaMapBinder adds scala style mapbindings:
+
+```scala
+class MyModule extends AbstractModule with ScalaModule {
+  def configure {
+    val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
+    mBinder.addBinding("1").toInstance(1)
+  }
+}
+```
+
+And then may be retrieved as any of the following:
+- `immutable.Map[K, V]`
+- `immutable.Map[K, Provider[V]]`
+- `immutable.Map[K, javax.inject.Provider[V]]`
+
+If you call `mapBinder.permitDuplicates()` on the binder then you may also inject:
+- `immutable.Map[K, immutable.Set[V]]`
+- `immutable.Map[K, immutable.Set[Provider[V]]]`
 
 ### And the stuff we forgot...
 
