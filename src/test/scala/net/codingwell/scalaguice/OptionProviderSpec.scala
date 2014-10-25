@@ -47,4 +47,16 @@ class OptionProviderSpec extends WordSpec with Matchers {
     val opt = Guice.createInjector(module).instance[Option[String], Named]
     opt should contain("Hello World")
   }
+
+  "allow binding an absent Optional" in {
+    val module = new AbstractModule with ScalaModule {
+      def configure(): Unit = {
+          bind[Optional[String]].toInstance(Optional.absent())
+          val key = Key.get(typeLiteral[Optional[String]])
+          bind[Option[String]].toProvider(new OptionProvider[String](key))
+      }
+    }
+    val opt = Guice.createInjector(module).instance[Option[String]]
+    opt should be (None)
+  }
 }
