@@ -190,6 +190,13 @@ If you call `mapBinder.permitDuplicates()` on the binder then you may also injec
 - `immutable.Map[K, immutable.Set[V]]`
 - `immutable.Map[K, immutable.Set[Provider[V]]]`
 
+## Gotchas
+
+In Scala, the words `override` and `with` are reserved and must be escaped to be used.
+```scala
+Modules.`override`(new BaseModule).`with`(new TestModule)
+```
+
 ### And the stuff we forgot...
 
 If you find a feature we support but don't mention here, submit an issue and we will add it.
