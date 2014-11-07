@@ -96,6 +96,16 @@ class ScalaOptionBinderSpec extends WordSpec with Matchers {
       validate(module)
     }
 
+    "bind optional without default" in {
+      val module = new AbstractModule {
+        override def configure(): Unit = {
+          val opt = ScalaOptionBinder.newOptionBinder[String](binder)
+        }
+      }
+
+      validateAbsent(module)
+    }
+
     /** Guice's Optional Binder API, Happy Path */
     "bind optional (original API) [Class]" in {
       val module = new AbstractModule {
@@ -128,6 +138,16 @@ class ScalaOptionBinderSpec extends WordSpec with Matchers {
       }
 
       validate(module)
+    }
+
+    "bind optional without default (original API)" in {
+      val module = new AbstractModule {
+        override def configure(): Unit = {
+          val opt = ScalaOptionBinder.newOptionalBinder(binder, classOf[String])
+        }
+      }
+
+      validateAbsent(module)
     }
 
     /** Non Happy Path */
@@ -299,6 +319,20 @@ class ScalaOptionBinderSpec extends WordSpec with Matchers {
       validate(module, expected = W("A"))
       validate(module, expected = W(1))
     }
+
+    /** Indirect New Scala Methods, Parameterized Wrappers */
+
+    "bind [T] indirectly" in {
+      val module = new AbstractModule with ScalaModule {
+        override def configure(): Unit = {
+          ScalaOptionBinder.newOptionBinder[String](binder)
+          bind[String].toInstance("A")
+        }
+      }
+
+      validate(module)
+    }
+
   }
 
   private def validate[T: Manifest](module: Module, expected: T = "A"): Unit = {
@@ -341,5 +375,19 @@ class ScalaOptionBinderSpec extends WordSpec with Matchers {
     injector.instance[Optional[T]](annotation).get should equal(expected)
     injector.instance[Optional[Provider[T]]](annotation).get.get() should equal(expected)
     injector.instance[Optional[javax.inject.Provider[T]]](annotation).get.get() should equal(expected)
+  }
+
+  private def validateAbsent[T: Manifest](module: Module, expected: T = "A"): Unit = {
+    val injector = Guice.createInjector(module)
+
+    // Check Option
+    injector.instance[Option[T]] should be (None)
+    injector.instance[Option[Provider[T]]] should be (None)
+    injector.instance[Option[javax.inject.Provider[T]]] should be (None)
+
+    // Check Optional
+    injector.instance[Optional[T]].isPresent should be (false)
+    injector.instance[Optional[Provider[T]]].isPresent should be (false)
+    injector.instance[Optional[javax.inject.Provider[T]]].isPresent should be (false)
   }
 }

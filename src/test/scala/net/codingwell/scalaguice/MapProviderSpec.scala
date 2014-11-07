@@ -90,6 +90,27 @@ class MapProviderSpec extends WordSpec with Matchers {
       }
       validateWithSet(Guice.createInjector(module).instance[im.Map[String, im.Set[Int]], Named])
     }
+
+    "allow binding an empty JMap[K, V]" in {
+      val module = new AbstractModule with ScalaModule {
+        def configure(): Unit = {
+          bind[JMap[String, Int]].toInstance(newMap())
+          bind[im.Map[String, Int]].toProvider(new MapProvider(Key.get(typeLiteral[JMap[String, Int]])))
+        }
+      }
+      Guice.createInjector(module).instance[im.Map[String, Int]] should be ('empty)
+    }
+
+    "allow binding an empty JMap[K, JSet[V]]" in {
+      val module = new AbstractModule with ScalaModule {
+        def configure(): Unit = {
+          bind[JMap[String, JSet[Int]]].toInstance(newMap())
+          val provider = new MapOfKToSetOfVProvider(Key.get(typeLiteral[JMap[String, JSet[Int]]]))
+          bind[im.Map[String, im.Set[Int]]].toProvider(provider)
+        }
+      }
+      Guice.createInjector(module).instance[im.Map[String, im.Set[Int]]] should be ('empty)
+    }
   }
 
   private def newMap[K, V](elems: (K, V)*): JMap[K, V] = {
