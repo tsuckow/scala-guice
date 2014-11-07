@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
   "com.google.guava" % "guava" % "17.0"
 )
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.7" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 
 libraryDependencies += "com.google.code.findbugs" % "jsr305" % "1.3.+" % "compile"
 
