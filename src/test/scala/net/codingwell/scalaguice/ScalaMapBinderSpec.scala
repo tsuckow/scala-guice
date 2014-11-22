@@ -31,6 +31,15 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
   "A MapBinder" should {
     /** New Scala Methods, Happy Path */
 
+    "bind empty [K,V]" in {
+      val module = new AbstractModule with ScalaModule {
+        def configure(): Unit = {
+          val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
+        }
+      }
+      validate[String,Int](module)
+    }
+
     "bind [K,V]" in {
       val module = new AbstractModule with ScalaModule {
         def configure(): Unit = {
@@ -295,6 +304,16 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
       intercept[CreationException] {
         validate(module, "1" -> 1)
       }
+    }
+
+    "permit duplicate keys in empty [K,V]" in {
+      val module = new AbstractModule with ScalaModule {
+        def configure(): Unit = {
+          val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
+          mBinder.permitDuplicates()
+        }
+      }
+      validateMultiMap[String,Int](module)
     }
 
     "permit duplicate keys in [K,V]" in {

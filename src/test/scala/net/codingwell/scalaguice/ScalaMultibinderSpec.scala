@@ -27,6 +27,14 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
   private val annotation = Names.named("N")
 
   "A multibinder" should {
+    "bind empty [T]" in {
+      val module = new AbstractModule with ScalaModule {
+        def configure() = {
+          val multi = ScalaMultibinder.newSetBinder[String](binder)
+        }
+      }
+      validate(Guice.createInjector(module).instance[im.Set[String]])
+    }
 
     "bind [TypeLiteral]" in {
       val module = new AbstractModule with ScalaModule {
