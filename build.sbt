@@ -15,7 +15,7 @@ useGpg := true
 libraryDependencies ++= Seq(
   "com.google.inject" % "guice" % "4.0-beta5",
   "com.google.inject.extensions" % "guice-multibindings" % "4.0-beta5",
-  "com.google.guava" % "guava" % "17.0"
+  "com.google.guava" % "guava" % "16.0.1"
 )
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
