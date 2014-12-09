@@ -15,10 +15,13 @@
  */
 package net.codingwell.scalaguice
 
-import com.google.inject.{PrivateModule, PrivateBinder, Binder, Scope, AbstractModule}
 import binder._
+import com.google.inject.matcher.Matchers
+import com.google.inject.{PrivateModule, PrivateBinder, Binder, Scope, AbstractModule}
 import java.lang.annotation.Annotation
 import javax.inject.Provider
+import org.aopalliance.intercept.MethodInterceptor
+
 
 /**
  * Allows binding via type parameters. Mix into <code>AbstractModule</code>
@@ -33,6 +36,8 @@ import javax.inject.Provider
  *     bind(classOf[CreditCardPaymentService])
  *     bind(new TypeLiteral[Bar[Foo]]{}).to(classOf[FooBarImpl])
  *     bind(classOf[PaymentService]).to(classOf[CreditCardPaymentService])
+ *
+ *     bindInterceptor(Matchers.any(), Matchers.annotatedWith(classOf[Logging]), new LoggingInterceptor())
  *   }
  * }
  * }}}
@@ -44,6 +49,8 @@ import javax.inject.Provider
  *     bind[CreditCardPaymentService]
  *     bind[Bar[Foo]].to[FooBarImpl]
  *     bind[PaymentService].to[CreditCardPaymentService]
+ *
+ *     bindInterceptor[Logging, LoggingInterceptor]
  *   }
  * }
  * }}}
@@ -61,6 +68,12 @@ trait InternalModule[B <: Binder] {
   protected[this] def bind[T: Manifest] = new ScalaAnnotatedBindingBuilder[T] {
     val myBinder = binderAccess
     val self = myBinder.bind(typeLiteral[T])
+  }
+
+  protected[this] def bindInterceptor[T <: Annotation : Manifest, T2: Manifest] {
+    val myBinder = binderAccess
+    val interceptor = manifest[T2].runtimeClass.newInstance.asInstanceOf[MethodInterceptor]
+    myBinder.bindInterceptor(Matchers.any(), Matchers.annotatedWith(cls[T]), interceptor)
   }
 
   protected[this] def bindScope[T <: Annotation : Manifest](scope: Scope) = binderAccess.bindScope(cls[T], scope)

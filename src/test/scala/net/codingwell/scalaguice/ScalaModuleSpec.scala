@@ -19,7 +19,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 import com.google.inject._
 
-class ScalaModuleSpec extends WordSpec with Matchers {
+class ScalaModuleSpec extends WordSpec with Matchers { 
 
   "A Scala Guice module" should {
 
@@ -122,6 +122,15 @@ class ScalaModuleSpec extends WordSpec with Matchers {
       val twoStrings = Guice.createInjector(module).getInstance(classOf[TwoStrings])
       twoStrings.first should be ("first")
       twoStrings.second should be ("second")
+    }
+    
+    "allow binding annotation interceptro" in {
+      val module = new AbstractModule with ScalaModule {
+        def configure() = {
+          bindInterceptor[AOP, AOPI]
+        }
+      }
+      Guice.createInjector(module).getInstance(classOf[AOPI])
     }
   }
 
