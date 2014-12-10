@@ -123,7 +123,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
       twoStrings.second should be ("second")
     }
 
-    "allow binding annotation interceptro" in {
+    "allow binding annotation interceptor" in {
       val module = new AbstractModule with ScalaModule {
         def configure() = {
           bind[Say].to[SayHi]

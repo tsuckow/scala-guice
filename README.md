@@ -201,7 +201,7 @@ bindInterceptor(Matchers.any(), Matchers.annotatedWith(classOf[Logging]), new Lo
 ```
 
 ```scala
-bindInterceptor[AOPI](methodMatcher = annotatedWith[AOP])
+bindInterceptor[LoggingInterceptor](methodMatcher = annotatedWith[Logging])
 ```
 
 ## Gotchas
