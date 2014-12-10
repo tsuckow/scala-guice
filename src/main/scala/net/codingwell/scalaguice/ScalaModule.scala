@@ -16,9 +16,10 @@
 package net.codingwell.scalaguice
 
 import binder._
-import com.google.inject.matcher.Matchers
+import com.google.inject.matcher.{Matcher, Matchers}
 import com.google.inject.{PrivateModule, PrivateBinder, Binder, Scope, AbstractModule}
 import java.lang.annotation.Annotation
+import java.lang.reflect.{AnnotatedElement, Method}
 import javax.inject.Provider
 import org.aopalliance.intercept.MethodInterceptor
 
@@ -70,10 +71,15 @@ trait InternalModule[B <: Binder] {
     val self = myBinder.bind(typeLiteral[T])
   }
 
-  protected[this] def bindInterceptor[T <: Annotation : Manifest, T2: Manifest] {
+  protected[this] def bindInterceptor[I <: MethodInterceptor : Manifest](classMatcher: Matcher[_ >: Class[_]] = Matchers.any(), methodMatcher: Matcher[_ >: AnnotatedElement]) {
     val myBinder = binderAccess
-    val interceptor = manifest[T2].runtimeClass.newInstance.asInstanceOf[MethodInterceptor]
-    myBinder.bindInterceptor(Matchers.any(), Matchers.annotatedWith(cls[T]), interceptor)
+    val interceptor = manifest[I].runtimeClass.newInstance.asInstanceOf[MethodInterceptor]
+    myBinder.requestInjection(interceptor)
+    myBinder.bindInterceptor(classMatcher, methodMatcher, interceptor)
+  }
+
+  protected[this] def annotatedWith[A <: Annotation : Manifest]: Matcher[AnnotatedElement] = {
+    Matchers.annotatedWith(cls[A])
   }
 
   protected[this] def bindScope[T <: Annotation : Manifest](scope: Scope) = binderAccess.bindScope(cls[T], scope)
