@@ -107,7 +107,7 @@ bind[A].toProvider[TypeProvider[B]]
 bind[A[String]].to[B[String]]
 bind[A].to[B].in[Singleton]
 
-bindInterceptor[A,B]
+bindInterceptor[AOPI](methodMatcher = annotatedWith[AOP])
 ```
 
 ### Multibinding
@@ -201,7 +201,7 @@ bindInterceptor(Matchers.any(), Matchers.annotatedWith(classOf[Logging]), new Lo
 ```
 
 ```scala
-bindInterceptor[Logging, LoggingInterceptor]
+bindInterceptor[AOPI](methodMatcher = annotatedWith[AOP])
 ```
 
 ## Gotchas

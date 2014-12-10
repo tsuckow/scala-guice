@@ -38,7 +38,7 @@ import org.aopalliance.intercept.MethodInterceptor
  *     bind(new TypeLiteral[Bar[Foo]]{}).to(classOf[FooBarImpl])
  *     bind(classOf[PaymentService]).to(classOf[CreditCardPaymentService])
  *
- *     bindInterceptor(Matchers.any(), Matchers.annotatedWith(classOf[Logging]), new LoggingInterceptor())
+ *     bindInterceptor(Matchers.any(), Matchers.annotatedWith(classOf[AOP]), new AOPI())
  *   }
  * }
  * }}}
@@ -51,7 +51,7 @@ import org.aopalliance.intercept.MethodInterceptor
  *     bind[Bar[Foo]].to[FooBarImpl]
  *     bind[PaymentService].to[CreditCardPaymentService]
  *
- *     bindInterceptor[Logging, LoggingInterceptor]
+ *     bindInterceptor[AOPI](methodMatcher = annotatedWith[AOP])
  *   }
  * }
  * }}}
