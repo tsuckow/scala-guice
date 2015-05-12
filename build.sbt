@@ -13,8 +13,8 @@ homepage := Some(url("https://github.com/codingwell/scala-guice"))
 useGpg := true
 
 libraryDependencies ++= Seq(
-  "com.google.inject" % "guice" % "4.0-beta5",
-  "com.google.inject.extensions" % "guice-multibindings" % "4.0-beta5",
+  "com.google.inject" % "guice" % "4.0",
+  "com.google.inject.extensions" % "guice-multibindings" % "4.0",
   "com.google.guava" % "guava" % "16.0.1"
 )
 
