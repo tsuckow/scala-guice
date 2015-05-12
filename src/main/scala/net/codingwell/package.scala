@@ -27,7 +27,7 @@ import scala.reflect.ClassTag
 
 package object scalaguice {
   /**
-   * Create a [[com.google.inject.TypeLiteral]] from a [[scala.reflect.Manifest]].
+   * Create a com.google.inject.TypeLiteral from a [[scala.reflect.Manifest]].
    * Subtypes of [[scala.AnyVal]] will be converted to their corresponding
    * Java wrapper classes.
    */

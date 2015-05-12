@@ -28,7 +28,7 @@ import scala.collection.{immutable => im}
 /**
  * Analog to Guice's Multibinder
  *
- * Use [[ScalaMultibinder.newSetBinder]] to create a multibinder that is scala friendly.
+ * Use ScalaMultibinder.newSetBinder to create a multibinder that is scala friendly.
  */
 sealed trait ScalaMultibinder[T] {
   /**
@@ -59,7 +59,7 @@ object ScalaMultibinder {
   /** Preferred Scala Methods */
 
   /**
-   * Returns a new multibinder that collects instances of type [[T]] in a [[scala.collection.immutable.Set]] that is
+   * Returns a new multibinder that collects instances of type `T` in a [[scala.collection.immutable.Set]] that is
    * itself bound with no binding annotation.
    */
   def newSetBinder[T: Manifest](binder: Binder) = {
@@ -67,15 +67,15 @@ object ScalaMultibinder {
   }
 
   /**
-   * Returns a new multibinder that collects instances of type [[T]] in a [[scala.collection.immutable.Set]] that is
-   * itself bound with a binding annotation [[Ann]].
+   * Returns a new multibinder that collects instances of type `T` in a [[scala.collection.immutable.Set]] that is
+   * itself bound with a binding annotation `Ann`.
    */
   def newSetBinder[T: Manifest, Ann <: Annotation : Manifest](binder: Binder) = {
     newMultibinder[T, Ann](binder, typeLiteral[T], cls[Ann])
   }
 
   /**
-   * Returns a new multibinder that collects instances of type [[T]] in a [[scala.collection.immutable.Set]] that is
+   * Returns a new multibinder that collects instances of type `T` in a [[scala.collection.immutable.Set]] that is
    * itself bound with a binding annotation.
    */
   def newSetBinder[T: Manifest](binder: Binder, annotation: Annotation) = {
@@ -94,7 +94,7 @@ object ScalaMultibinder {
 
   /**
    * Returns a new multibinder that collects instances of `typ` in a [[scala.collection.immutable.Set]] that is
-   * itself bound with no binding annotation. Note that `typ` is ignored in favor of using the [[T]] Manifest to capture
+   * itself bound with no binding annotation. Note that `typ` is ignored in favor of using the `T` Manifest to capture
    * type arguments.
    */
   def newSetBinder[T: Manifest](binder: Binder, typ: Class[T]) = {
