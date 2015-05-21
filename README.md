@@ -19,18 +19,18 @@ We currently support Scala `2.10, 2.11`
 <dependency>
     <groupId>net.codingwell</groupId>
     <artifactId>scala-guice_2.10</artifactId>
-    <version>4.0.0-snapshot</version>
+    <version>4.0.0</version>
 </dependency>
 ```
 
 #####sbt:
 ```scala
-"net.codingwell" %% "scala-guice" % "4.0.0-snapshot"
+"net.codingwell" %% "scala-guice" % "4.0.0"
 ```
 
 ##### gradle:
 ```groovy
-'net.codingwell:scala-guice_2.10:4.0.0-snapshot'
+'net.codingwell:scala-guice_2.10:4.0.0'
 ```
 
 ### Mixin
