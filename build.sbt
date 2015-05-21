@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 
-libraryDependencies += "com.google.code.findbugs" % "jsr305" % "1.3.+" % "compile"
+libraryDependencies += "com.google.code.findbugs" % "jsr305" % "1.3.9" % "compile"
 
 autoAPIMappings := true
 
