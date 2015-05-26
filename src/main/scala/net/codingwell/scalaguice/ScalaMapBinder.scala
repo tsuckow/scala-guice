@@ -27,7 +27,10 @@ import scala.collection.{immutable => im}
 /**
  * Analog to Guice's MapBinder
  *
- * Use [[ScalaMapBinder.newMapBinder]] to create a map binder that is scala friendly.
+ * Use ScalaMapBinder.newMapBinder to create a map binder that is scala friendly.
+ *
+ * @tparam K The key type for the bound map
+ * @tparam V The value type for the bound map
  */
 trait ScalaMapBinder[K, V] {
   /**
@@ -63,24 +66,24 @@ object ScalaMapBinder {
   /** Preferred Scala Methods */
 
   /**
-   * Returns a new mapbinder that collects entries of [[K]]/[[V]] in a
-   * [[im.Map]] that is itself bound with no binding annotation.
+   * Returns a new mapbinder that collects entries of `K`/`V` in a
+   * [[scala.collection.immutable.Map]] that is itself bound with no binding annotation.
    */
   def newMapBinder[K: Manifest, V: Manifest](binder: Binder): ScalaMapBinder[K, V] = {
     newMapBinder(binder, typeLiteral[K], typeLiteral[V])
   }
 
   /**
-   * Returns a new mapbinder that collects entries of [[K]]/[[V]] in a
-   * [[im.Map]] that is itself bound with `annotation`.
+   * Returns a new mapbinder that collects entries of `K`/`V` in a
+   * [[scala.collection.immutable.Map]] that is itself bound with `annotation`.
    */
   def newMapBinder[K: Manifest, V: Manifest](binder: Binder, annotation: Annotation): ScalaMapBinder[K, V] = {
     newMapBinder(binder, typeLiteral[K], typeLiteral[V], annotation)
   }
 
   /**
-   * Returns a new mapbinder that collects entries of [[K]]/[[V]] in a
-   * [[im.Map]] that is itself bound with [[Ann]]
+   * Returns a new mapbinder that collects entries of `K`/`V` in a
+   * [[scala.collection.immutable.Map]] that is itself bound with `Ann`
    */
   def newMapBinder[K: Manifest, V: Manifest, Ann <: Annotation : Manifest](binder: Binder): ScalaMapBinder[K, V] = {
     newMapBinder(binder, typeLiteral[K], typeLiteral[V], cls[Ann])
@@ -89,8 +92,8 @@ object ScalaMapBinder {
   /** Guice's MapBinder API */
 
   /**
-   * Returns a new mapbinder that collects entries of [[K]]/[[V]] in a
-   * [[im.Map]] that is itself bound with no binding annotation.
+   * Returns a new mapbinder that collects entries of `K`/`V` in a
+   * [[scala.collection.immutable.Map]] that is itself bound with no binding annotation.
    */
   def newMapBinder[K, V](parentBinder: Binder, kTyp: TypeLiteral[K], vTyp: TypeLiteral[V]): ScalaMapBinder[K, V] = {
     val binder = skipSources(parentBinder)
@@ -99,8 +102,8 @@ object ScalaMapBinder {
   }
 
   /**
-   * Returns a new mapbinder that collects entries of [[K]]/[[V]] in a
-   * [[im.Map]] that is itself bound with no binding annotation. Note that
+   * Returns a new mapbinder that collects entries of `K`/`V` in a
+   * [[scala.collection.immutable.Map]] that is itself bound with no binding annotation. Note that
    * `kTyp` and `vTyp` are ignored in favor of using the Manifest to capture type arguments.
    */
   def newMapBinder[K: Manifest, V: Manifest](binder: Binder, kTyp: Class[K], vTyp: Class[V]): ScalaMapBinder[K, V] = {
@@ -108,8 +111,8 @@ object ScalaMapBinder {
   }
 
   /**
-   * Returns a new mapbinder that collects entries of [[K]]/[[V]] in a
-   * [[im.Map]] that is itself bound with `annotation`.
+   * Returns a new mapbinder that collects entries of `K`/`V` in a
+   * [[scala.collection.immutable.Map]] that is itself bound with `annotation`.
    */
   def newMapBinder[K, V](parentBinder: Binder, kTyp: TypeLiteral[K], vTyp: TypeLiteral[V],
                          annotation: Annotation): ScalaMapBinder[K, V] = {
@@ -120,8 +123,8 @@ object ScalaMapBinder {
   }
 
   /**
-   * Returns a new mapbinder that collects entries of [[K]]/[[V]] in a
-   * [[im.Map]] that is itself bound with `annotation`. Note that
+   * Returns a new mapbinder that collects entries of `K`/`V` in a
+   * [[scala.collection.immutable.Map]] that is itself bound with `annotation`. Note that
    * `kTyp` and `vTyp` are ignored in favor of using the Manifest to capture type arguments.
    */
   def newMapBinder[K: Manifest, V: Manifest](binder: Binder, kTyp: Class[K], vTyp: Class[V],
@@ -130,8 +133,8 @@ object ScalaMapBinder {
   }
 
   /**
-   * Returns a new mapbinder that collects entries of [[K]]/[[V]] in a
-   * [[im.Map]] that is itself bound with `annotationType`.
+   * Returns a new mapbinder that collects entries of `K`/`V` in a
+   * [[scala.collection.immutable.Map]] that is itself bound with `annotationType`.
    */
   def newMapBinder[K, V](parentBinder: Binder, kTyp: TypeLiteral[K], vTyp: TypeLiteral[V],
                          annotationType: Class[_ <: Annotation]): ScalaMapBinder[K, V] = {
@@ -142,8 +145,8 @@ object ScalaMapBinder {
   }
 
   /**
-   * Returns a new mapbinder that collects entries of [[K]]/[[V]] in a
-   * [[im.Map]] that is itself bound with `annotationType`. Note that
+   * Returns a new mapbinder that collects entries of `K`/`V` in a
+   * [[scala.collection.immutable.Map]] that is itself bound with `annotationType`. Note that
    * `kTyp` and `vTyp` are ignored in favor of using the Manifest to capture type arguments.
    */
   def newMapBinder[K: Manifest, V: Manifest](binder: Binder, kTyp: Class[K], vTyp: Class[V],
@@ -174,7 +177,7 @@ object ScalaMapBinder {
    * As a Module, the [[RealScalaMapBinder]] installs the binding to the map itself. As a module, this implements
    * `equals()` and `hashCode()` in order to trick Guice into executing its `configure` method only once. That makes
    * it so that multiple binders can be created for the same target map, but only one is bound. The binding maps
-   * the [[java.util.Map]] to a [[im.Map]] for useful Scala injection.
+   * the [[java.util.Map]] to a [[scala.collection.immutable.Map]] for useful Scala injection.
    */
   private class RealScalaMapBinder[K, V](parent: MapBinder[K, V], kTyp: TypeLiteral[K], vTyp: TypeLiteral[V],
                                          annotatedKey: Key[_]) extends ScalaMapBinder[K, V] with Module {

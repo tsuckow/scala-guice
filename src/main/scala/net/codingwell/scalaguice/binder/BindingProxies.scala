@@ -24,7 +24,7 @@ import net.codingwell.scalaguice.ScalaModule.{ScalaLinkedBindingBuilder, ScalaSc
 import com.google.inject.name.Names
 
 /**
- * Proxy for [[com.google.inject.binder.ScopedBindingBuilder]]
+ * Proxy for com.google.inject.binder.ScopedBindingBuilder
  */
 trait ScopedBindingBuilderProxy extends ScopedBindingBuilder
                           with Proxy {
@@ -37,7 +37,7 @@ trait ScopedBindingBuilderProxy extends ScopedBindingBuilder
 }
 
 /**
- * Proxy for [[com.google.inject.binder.LinkedBindingBuilder]]
+ * Proxy for com.google.inject.binder.LinkedBindingBuilder
  */
 trait LinkedBindingBuilderProxy[T] extends LinkedBindingBuilder[T] with ScopedBindingBuilderProxy {
   override def self: LinkedBindingBuilder[T]
@@ -61,7 +61,7 @@ trait LinkedBindingBuilderProxy[T] extends LinkedBindingBuilder[T] with ScopedBi
 }
 
 /**
- * Proxy for [[com.google.inject.binder.AnnotatedBindingBuilder]]
+ * Proxy for com.google.inject.binder.AnnotatedBindingBuilder
  */
 trait AnnotatedBindingBuilderProxy[T] extends AnnotatedBindingBuilder[T] with LinkedBindingBuilderProxy[T] {
   override def self: AnnotatedBindingBuilder[T]
@@ -76,7 +76,7 @@ trait AnnotatedBindingBuilderProxy[T] extends AnnotatedBindingBuilder[T] with Li
 }
 
 /**
- * Proxy for [[com.google.inject.binder.AnnotatedElementBuilder]]
+ * Proxy for com.google.inject.binder.AnnotatedElementBuilder
  */
 trait AnnotatedElementBuilderProxy[T] extends AnnotatedElementBuilder with Proxy {
   override def self: AnnotatedElementBuilder

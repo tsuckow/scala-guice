@@ -25,7 +25,7 @@ import net.codingwell.scalaguice.ScalaModule.ScalaLinkedBindingBuilder
 /**
  * Analog to Guice's OptionalBinder
  *
- * Use [[ScalaOptionBinder.newOptionBinder]] to create an option binder that is scala friendly.
+ * Use ScalaOptionBinder.newOptionBinder to create an option binder that is scala friendly.
  */
 trait ScalaOptionBinder[T] {
   /**
@@ -51,22 +51,22 @@ object ScalaOptionBinder {
   /** Preferred Scala Methods */
 
   /**
-   * Returns a new optionbinder that binds an instance of [[T]] in a [[scala.Option]].
+   * Returns a new optionbinder that binds an instance of `T` in a [[scala.Option]].
    */
   def newOptionBinder[T: Manifest](binder: Binder): ScalaOptionBinder[T] = {
     newOptionBinder(binder, typeLiteral[T])
   }
 
   /**
-   * Returns a new optionbinder that binds an instance of [[T]] in a [[scala.Option]] that is
-   * itself bound with a binding annotation [[Ann]].
+   * Returns a new optionbinder that binds an instance of `T` in a [[scala.Option]] that is
+   * itself bound with a binding annotation `Ann`.
    */
   def newOptionBinder[T: Manifest, Ann <: Annotation : Manifest](binder: Binder): ScalaOptionBinder[T] = {
     newOptionBinder(binder, Key.get(typeLiteral[T], cls[Ann]))
   }
 
   /**
-   * Returns a new optionbinder that binds an instance of [[T]] in a [[scala.Option]] that is
+   * Returns a new optionbinder that binds an instance of `T` in a [[scala.Option]] that is
    * itself bound with a binding annotation.
    */
   def newOptionBinder[T: Manifest](binder: Binder, annotation: Annotation): ScalaOptionBinder[T] = {

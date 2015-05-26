@@ -4,7 +4,7 @@ description := "Scala syntax for Guice"
 
 organization := "net.codingwell"
 
-version := "4.0.0-beta5"
+version := "4.0.0"
 
 licenses := Seq("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 
@@ -13,14 +13,16 @@ homepage := Some(url("https://github.com/codingwell/scala-guice"))
 useGpg := true
 
 libraryDependencies ++= Seq(
-  "com.google.inject" % "guice" % "4.0-beta5",
-  "com.google.inject.extensions" % "guice-multibindings" % "4.0-beta5",
-  "com.google.guava" % "guava" % "17.0"
+  "com.google.inject" % "guice" % "4.0",
+  "com.google.inject.extensions" % "guice-multibindings" % "4.0",
+  "com.google.guava" % "guava" % "16.0.1"
 )
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
 
-libraryDependencies += "com.google.code.findbugs" % "jsr305" % "1.3.+" % "compile"
+libraryDependencies += "com.google.code.findbugs" % "jsr305" % "1.3.9" % "compile"
+
+autoAPIMappings := true
 
 scalaVersion := "2.11.2"
 
