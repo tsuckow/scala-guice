@@ -56,7 +56,7 @@ class InjectorExtensionsSpec extends WordSpec with Matchers {
 
     "allow existing bindings to be retrieved optionally" in {
       val Some(binding) = injector.existingBinding[A]
-      binding.getKey.getTypeLiteral == typeLiteral[B]
+      binding.getProvider.get() shouldBe a [B]
     }
 
     "allow missing bindings to be retrieved optionally" in {
