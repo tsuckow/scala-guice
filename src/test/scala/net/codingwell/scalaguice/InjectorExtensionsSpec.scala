@@ -53,5 +53,14 @@ class InjectorExtensionsSpec extends WordSpec with Matchers {
     "allow instance to be retreived using a type parameter and an annotation class" in {
       injector.instance[B, Named]
     }
+
+    "allow existing bindings to be retrieved optionally" in {
+      val Some(binding) = injector.existingBinding[A]
+      binding.getKey.getTypeLiteral == typeLiteral[B]
+    }
+
+    "allow missing bindings to be retrieved optionally" in {
+      injector.existingBinding[Foo] should not be defined
+    }
   }
 }
