@@ -27,5 +27,7 @@ object InjectorExtensions {
     def instance[T: Manifest, Ann <: Annotation : Manifest] = i.getInstance(typeLiteral[T].annotatedWith[Ann])
 
     def existingBinding[T: Manifest] = Option(i.getExistingBinding(typeLiteral[T].toKey))
+    def existingBinding[T: Manifest](ann: Annotation) = Option(i.getExistingBinding(typeLiteral[T].annotatedWith(ann)))
+    def existingBinding[T: Manifest, Ann <: Annotation : Manifest] = Option(i.getExistingBinding(typeLiteral[T].annotatedWith[Ann]))
   }
 }

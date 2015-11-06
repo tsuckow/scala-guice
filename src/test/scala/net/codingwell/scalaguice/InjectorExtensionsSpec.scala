@@ -62,5 +62,24 @@ class InjectorExtensionsSpec extends WordSpec with Matchers {
     "allow missing bindings to be retrieved optionally" in {
       injector.existingBinding[Foo] should not be defined
     }
+
+    "allow existing annotated bindings to be retrieved optionally" in {
+      val Some(binding) = injector.existingBinding[B, Named]
+      binding.getProvider.get() shouldBe a [B]
+    }
+
+    "allow missing annotated bindings to be retrieved optionally" in {
+      injector.existingBinding[Foo, Named] should not be defined
+    }
+
+    "allow existing named bindings to be retrieved optionally" in {
+      val Some(binding) = injector.existingBinding[A](named("d"))
+      binding.getProvider.get() shouldBe a [B]
+    }
+
+    "allow missing named bindings to be retrieved optionally" in {
+      injector.existingBinding[Foo](named("d")) should not be defined
+      injector.existingBinding[A](named("foo")) should not be defined
+    }
   }
 }
