@@ -19,6 +19,7 @@ import com.google.inject.name.Named
 import com.google.inject.name.Names.named
 import com.google.inject.{AbstractModule, Guice}
 import net.codingwell.scalaguice.InjectorExtensions._
+import net.codingwell.scalaguice.KeyExtensions._
 import org.scalatest.{Matchers, WordSpec}
 
 class InjectorExtensionsSpec extends WordSpec with Matchers {
@@ -80,6 +81,18 @@ class InjectorExtensionsSpec extends WordSpec with Matchers {
     "allow missing named bindings to be retrieved optionally" in {
       injector.existingBinding[Foo](named("d")) should not be defined
       injector.existingBinding[A](named("foo")) should not be defined
+    }
+
+    def keyExistsFn[T: Manifest] = typeLiteral[T].toKey
+    def keyMissingFn[T: Manifest] = typeLiteral[T].annotatedWithName("foo")
+
+    "allow existing bindings to be retrieved by key optionally" in {
+      val Some(binding) = injector.existingBinding[A](keyExistsFn[A])
+      binding.getProvider.get() shouldBe a [B]
+    }
+
+    "allow missing bindings to be retrieved by key optionally" in {
+      injector.existingBinding[A](keyMissingFn[A]) should not be defined
     }
   }
 }

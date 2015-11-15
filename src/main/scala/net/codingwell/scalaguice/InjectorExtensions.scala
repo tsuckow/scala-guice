@@ -15,7 +15,7 @@
  */
 package net.codingwell.scalaguice
 
-import com.google.inject.{Key, Injector}
+import com.google.inject.{Binding, Key, Injector}
 import java.lang.annotation.Annotation
 import KeyExtensions._
 
@@ -26,8 +26,9 @@ object InjectorExtensions {
     def instance[T: Manifest](ann: Annotation) = i.getInstance(typeLiteral[T].annotatedWith(ann))
     def instance[T: Manifest, Ann <: Annotation : Manifest] = i.getInstance(typeLiteral[T].annotatedWith[Ann])
 
-    def existingBinding[T: Manifest] = Option(i.getExistingBinding(typeLiteral[T].toKey))
-    def existingBinding[T: Manifest](ann: Annotation) = Option(i.getExistingBinding(typeLiteral[T].annotatedWith(ann)))
-    def existingBinding[T: Manifest, Ann <: Annotation : Manifest] = Option(i.getExistingBinding(typeLiteral[T].annotatedWith[Ann]))
+    def existingBinding[T: Manifest]: Option[Binding[T]] = existingBinding(typeLiteral[T].toKey)
+    def existingBinding[T: Manifest](ann: Annotation): Option[Binding[T]] = existingBinding(typeLiteral[T].annotatedWith(ann))
+    def existingBinding[T: Manifest, Ann <: Annotation : Manifest]: Option[Binding[T]] = existingBinding(typeLiteral[T].annotatedWith[Ann])
+    def existingBinding[T](key: Key[T]): Option[Binding[T]] = Option(i.getExistingBinding(key))
   }
 }
