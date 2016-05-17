@@ -46,7 +46,7 @@ class MyModule extends AbstractModule with ScalaModule {
 }
 
 class MyPrivateModule extends PrivateModule with ScalaPrivateModule {
-  def configure {
+  def configure(): Unit = {
     bind[Foo].to[RealFoo]
     expose[Foo]
 
