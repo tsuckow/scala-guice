@@ -37,7 +37,7 @@ We currently support Scala `2.10, 2.11`
 Mixin ScalaModule with your AbstractModule for rich scala magic (or ScalaPrivateModule with your PrivateModule):
 ```scala
 class MyModule extends AbstractModule with ScalaModule {
-  def configure {
+  def configure(): Unit = {
     bind[Service].to[ServiceImpl].in[Singleton]
     bind[CreditCardPaymentService]
     bind[Bar[Foo]].to[FooBarImpl]
@@ -46,7 +46,7 @@ class MyModule extends AbstractModule with ScalaModule {
 }
 
 class MyPrivateModule extends PrivateModule with ScalaPrivateModule {
-  def configure {
+  def configure(): Unit = {
     bind[Foo].to[RealFoo]
     expose[Foo]
 
@@ -116,7 +116,7 @@ The ScalaMultibinder adds scala style multibindings:
 
 ```scala
 class MyModule extends AbstractModule with ScalaModule {
-  def configure {
+  def configure(): Unit = {
     val stringMulti = ScalaMultibinder.newSetBinder[String](binder)
     stringMulti.addBinding.toInstance("A")
 
@@ -145,7 +145,7 @@ Newly available in Guice 4.0-beta5, we've got some support for OptionalBinder.
 
 ```scala
 class MyModule extends AbstractModule with ScalaModule {
-  def configure {
+  def configure(): Unit = {
     val optBinder = ScalaOptionBinder.newOptionBinder[String](binder)
     optBinder.setDefault.toInstance("A")
     // To override the default binding (likely in another module):
@@ -176,7 +176,7 @@ The ScalaMapBinder adds scala style mapbindings:
 
 ```scala
 class MyModule extends AbstractModule with ScalaModule {
-  def configure {
+  def configure(): Unit = {
     val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
     mBinder.addBinding("1").toInstance(1)
   }
