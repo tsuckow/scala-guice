@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
   "com.google.guava" % "guava" % "19.0"
 )
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0-RC4" % "test"
 
 libraryDependencies += "com.google.code.findbugs" % "jsr305" % "3.0.1" % "compile"
 
@@ -26,7 +26,7 @@ autoAPIMappings := true
 
 scalaVersion := "2.11.8"
 
-crossScalaVersions := Seq("2.10.6", "2.11.8")
+crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-M5")
 
 testListeners <<= target.map(t => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath)))
 
