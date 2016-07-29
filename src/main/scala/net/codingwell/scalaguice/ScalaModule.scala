@@ -64,12 +64,14 @@ import org.aopalliance.intercept.MethodInterceptor
 trait InternalModule[B <: Binder] {
   import ScalaModule._
 
-  protected[this] def binderAccess: B
-
-  protected[this] def bind[T: Manifest] = new ScalaAnnotatedBindingBuilder[T] {
+  class BindingBuilder[T: Manifest] extends ScalaAnnotatedBindingBuilder[T] {
     val myBinder = binderAccess
     val self = myBinder.bind(typeLiteral[T])
   }
+
+  protected[this] def binderAccess: B
+
+  protected[this] def bind[T: Manifest] = new BindingBuilder[T]
 
   protected[this] def bindInterceptor[I <: MethodInterceptor : Manifest](classMatcher: Matcher[_ >: Class[_]] = Matchers.any(), methodMatcher: Matcher[_ >: AnnotatedElement]) {
     val myBinder = binderAccess
@@ -93,10 +95,9 @@ trait ScalaModule extends AbstractModule with InternalModule[Binder] {
   // this: AbstractModule =>
   // see http://lampsvn.epfl.ch/trac/scala/ticket/3564
 
-  //Hack, no easy way to exclude the bind method that gets added to classes inheriting ScalaModule
-  //So we experimentally figured out how many calls up is the source, so we use that
-  //Commit 52c2e92f8f6131e4a9ea473f58be3e32cd172ce6 has better class exclusion
-  protected[this] def binderAccess = super.binder.withSource((new Throwable).getStackTrace()(4)) // should not need super
+  import ScalaModule._
+
+  protected[this] def binderAccess = super.binder.withSource(filterTrace((new Throwable).getStackTrace())) // should not need super
 }
 
 trait ScalaPrivateModule extends PrivateModule with InternalModule[PrivateBinder] {
@@ -106,19 +107,43 @@ trait ScalaPrivateModule extends PrivateModule with InternalModule[PrivateBinder
 
   import ScalaModule._
 
-  //Hack, no easy way to exclude the bind method that gets added to classes inheriting ScalaModule
-  //So we experimentally figured out how many calls up is the source, so we use that
-  //Commit 52c2e92f8f6131e4a9ea473f58be3e32cd172ce6 has better class exclusion
-  protected[this] def binderAccess = super.binder.withSource((new Throwable).getStackTrace()(5)) // should not need super
+  protected[this] def binderAccess = super.binder.withSource(filterTrace((new Throwable).getStackTrace())) // should not need super
 
-  protected[this] def expose[T: Manifest] = new ScalaAnnotatedElementBuilder[T] {
+  class ElementBuilder[T: Manifest] extends ScalaAnnotatedElementBuilder[T] {
     val myBinder = binderAccess
     val self = myBinder.expose(typeLiteral[T])
   }
+
+  protected[this] def expose[T: Manifest] = new ElementBuilder[T]
 }
 
 object ScalaModule {
   import java.lang.annotation.{Annotation => JAnnotation}
+
+  def filterTrace(trace:Array[StackTraceElement]):StackTraceElement = {
+    import scala.language.existentials //For inner class name retrieval
+
+    trace.find((s) => {
+      val complex =
+      s.getClassName != classOf[ScalaModule].getName &&
+      s.getClassName != classOf[ScalaPrivateModule].getName &&
+      s.getClassName != classOf[ScalaPrivateModule#ElementBuilder[_]].getName &&
+      s.getClassName != classOf[InternalModule[_]].getName &&
+      s.getClassName != classOf[InternalModule[_]#BindingBuilder[_]].getName &&
+      s.getClassName != classOf[ScalaModule].getName+"$class" && //Scala <= 2.11 (Ancillary Class for traits)
+      s.getClassName != classOf[ScalaPrivateModule].getName+"$class" && //Scala <= 2.11 (Ancillary Class for traits)
+      s.getMethodName != "binderAccess" && //Scala <= 2.11 (method on inheriting class)
+      s.getMethodName != "bind" && //Scala <= 2.11 (method on inheriting class)
+      s.getMethodName != "bindInterceptor" && //Scala <= 2.11 (method on inheriting class)
+      s.getMethodName != "expose" //Scala <= 2.11 (method on inheriting class)
+
+      complex
+      //For testing purposes
+      //val simple = s.toString.contains("configure")
+      //assert( complex == simple,  s.getClassName+" :: "+s.getMethodName()+" :: "+s.getFileName()+" == "+classOf[ScalaModule].getName)
+      //simple
+    }).getOrElse(null)
+  }
 
   trait ScalaScopedBindingBuilder extends ScopedBindingBuilderProxy {
     def in[TAnn <: JAnnotation : Manifest]() = self in cls[TAnn]
