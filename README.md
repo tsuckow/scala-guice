@@ -1,10 +1,7 @@
 Scala extensions for Google Guice 4.0
 =====================================
 
-**Master:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=master)](https://travis-ci.org/codingwell/scala-guice)
 **Develop:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=develop)](https://travis-ci.org/codingwell/scala-guice)
-
-Please submit pull requests against the **develop** branch.
 
 **Note: Multibinding behaviour had changed in beta4, duplicates are now ignored instead of throwing an exception.**
 
