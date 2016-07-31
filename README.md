@@ -1,4 +1,4 @@
-Scala extensions for Google Guice 4.0
+Scala extensions for Google Guice 4.1
 =====================================
 
 **Develop:** [![Build Status](https://travis-ci.org/codingwell/scala-guice.png?branch=develop)](https://travis-ci.org/codingwell/scala-guice)
