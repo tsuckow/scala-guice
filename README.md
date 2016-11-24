@@ -9,7 +9,7 @@ Getting Started
 ---------------
 
 ### Add dependency
-We currently support Scala `2.10, 2.11, 2.12.0-M5`
+We currently support Scala `2.10, 2.11, 2.12`
 
 ##### maven:
 ```xml
