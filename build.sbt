@@ -26,7 +26,7 @@ autoAPIMappings := true
 
 scalaVersion := "2.11.8"
 
-crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-M5")
+crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0")
 
 testListeners <<= target.map(t => Seq(new eu.henkelmann.sbt.JUnitXmlTestsListener(t.getAbsolutePath)))
 
