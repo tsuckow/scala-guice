@@ -33,6 +33,9 @@ We currently support Scala `2.10, 2.11, 2.12.0-M5`
 ### Mixin
 Mixin ScalaModule with your AbstractModule for rich scala magic (or ScalaPrivateModule with your PrivateModule):
 ```scala
+import com.google.inject.{AbstractModule, PrivateModule}
+import net.codingwell.scalaguice.{ScalaModule, ScalaPrivateModule}
+
 class MyModule extends AbstractModule with ScalaModule {
   def configure(): Unit = {
     bind[Service].to[ServiceImpl].in[Singleton]
@@ -59,6 +62,8 @@ class MyPrivateModule extends PrivateModule with ScalaPrivateModule {
 ### Inject
 Wrap the injector in a ScalaInjector for even more rich scala magic:
 ```scala
+import com.google.inject.Guice
+
 object MyServer {
   def main(args: Array[String]) {
     val injector = Guice.createInjector(new MyModule(), new MyPrivateModule)
