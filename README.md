@@ -20,7 +20,7 @@ We currently support Scala `2.10, 2.11, 2.12`
 </dependency>
 ```
 
-#####sbt:
+##### sbt:
 ```scala
 "net.codingwell" %% "scala-guice" % "4.1.0"
 ```
