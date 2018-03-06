@@ -29,7 +29,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
   "A multibinder" should {
     "bind empty [T]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder[String](binder)
         }
       }
@@ -38,7 +38,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
 
     "bind [TypeLiteral]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[String])
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
@@ -49,7 +49,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
 
     "bind [Class]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder(binder, classOf[String])
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
@@ -60,7 +60,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
 
     "bind [TypeLiteral, Annotation]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[String], annotation)
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
@@ -71,7 +71,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
 
     "bind [Class, Annotation]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder(binder, classOf[String], annotation)
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
@@ -82,7 +82,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
 
     "bind [TypeLiteral, ClassAnnotation]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[String], classOf[Named])
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
@@ -94,7 +94,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
     "bind [Class, ClassAnnotation]" in {
       import com.google.inject.name.Named
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder(binder, classOf[String], classOf[Named])
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
@@ -105,7 +105,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
 
     "deduplicate" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[Symbol])
           multi.addBinding.toInstance('A)
           multi.addBinding.toInstance('A)
@@ -116,7 +116,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
 
     "permit duplicates" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder(binder, typeLiteral[Symbol]).permitDuplicates()
           multi.addBinding.toInstance('A)
         }
@@ -228,7 +228,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
 
     "bind [T]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder[String](binder)
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
@@ -240,7 +240,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
     "bind [T, Ann]" in {
       import com.google.inject.name.Named
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder[String, Named](binder)
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")
@@ -251,7 +251,7 @@ class ScalaMultibinderSpec extends WordSpec with Matchers {
 
     "bind [T](Ann)" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           val multi = ScalaMultibinder.newSetBinder[String](binder, annotation)
           multi.addBinding.toInstance("A")
           multi.addBinding.toInstance("B")

@@ -33,7 +33,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind empty [K,V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
         }
       }
@@ -42,7 +42,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind [K,V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
           mBinder.addBinding("1").toInstance(1)
           mBinder.addBinding("2").toInstance(2)
@@ -53,7 +53,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind [K,V](annotation)" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder, annotation)
           mBinder.addBinding("1").toInstance(1)
           mBinder.addBinding("2").toInstance(2)
@@ -64,7 +64,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind [K,V,Ann]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder[String, Int, Named](binder)
           mBinder.addBinding("1").toInstance(1)
           mBinder.addBinding("2").toInstance(2)
@@ -77,7 +77,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind typeLiteral[K], typeLiteral[V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder(binder, typeLiteral[String], typeLiteral[Int])
           mBinder.addBinding("1").toInstance(1)
           mBinder.addBinding("2").toInstance(2)
@@ -88,7 +88,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind class[K], class[V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder(binder, classOf[String], classOf[Int])
           mBinder.addBinding("1").toInstance(1)
           mBinder.addBinding("2").toInstance(2)
@@ -99,7 +99,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind typeLiteral[K], typeLiteral[V], annotation" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder(binder, typeLiteral[String], typeLiteral[Int], annotation)
           mBinder.addBinding("1").toInstance(1)
           mBinder.addBinding("2").toInstance(2)
@@ -110,7 +110,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind class[K], class[V], annotation" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder(binder, classOf[String], classOf[Int], annotation)
           mBinder.addBinding("1").toInstance(1)
           mBinder.addBinding("2").toInstance(2)
@@ -121,7 +121,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind typeLiteral[K], typeLiteral[V], class[Ann]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder(binder, typeLiteral[String], typeLiteral[Int], classOf[Named])
           mBinder.addBinding("1").toInstance(1)
           mBinder.addBinding("2").toInstance(2)
@@ -132,7 +132,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind class[K], class[V], class[Ann]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder(binder, classOf[String], classOf[Int], classOf[Named])
           mBinder.addBinding("1").toInstance(1)
           mBinder.addBinding("2").toInstance(2)
@@ -145,7 +145,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind deep parameterization in [K,V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val iBinder = ScalaMapBinder.newMapBinder[W[String], W[Int]](binder)
           iBinder.addBinding(W("1")).toInstance(W(1))
           iBinder.addBinding(W("2")).toInstance(W(2))
@@ -160,7 +160,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind deep parameterization in [K,V](annotation)" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val iBinder = ScalaMapBinder.newMapBinder[W[String], W[Int]](binder, annotation)
           iBinder.addBinding(W("1")).toInstance(W(1))
           iBinder.addBinding(W("2")).toInstance(W(2))
@@ -175,7 +175,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind deep parameterization in [K,V,Ann]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val iBinder = ScalaMapBinder.newMapBinder[W[String], W[Int], Named](binder)
           iBinder.addBinding(W("1")).toInstance(W(1))
           iBinder.addBinding(W("2")).toInstance(W(2))
@@ -192,7 +192,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind deep parameterization in typeLiteral[K], typeLiteral[V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val iBinder = ScalaMapBinder.newMapBinder(binder, typeLiteral[W[String]], typeLiteral[W[Int]])
           iBinder.addBinding(W("1")).toInstance(W(1))
           iBinder.addBinding(W("2")).toInstance(W(2))
@@ -207,7 +207,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind deep parameterization in class[K], class[V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val iBinder = ScalaMapBinder.newMapBinder(binder, classOf[W[String]], classOf[W[Int]])
           iBinder.addBinding(W("1")).toInstance(W(1))
           iBinder.addBinding(W("2")).toInstance(W(2))
@@ -222,7 +222,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind deep parameterization in typeLiteral[K], typeLiteral[V], annotation" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val iBinder = ScalaMapBinder.newMapBinder(binder, typeLiteral[W[String]], typeLiteral[W[Int]], annotation)
           iBinder.addBinding(W("1")).toInstance(W(1))
           iBinder.addBinding(W("2")).toInstance(W(2))
@@ -237,7 +237,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind deep parameterization in class[K], class[V], annotation" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val iBinder = ScalaMapBinder.newMapBinder(binder, classOf[W[String]], classOf[W[Int]], annotation)
           iBinder.addBinding(W("1")).toInstance(W(1))
           iBinder.addBinding(W("2")).toInstance(W(2))
@@ -252,7 +252,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind deep parameterization in typeLiteral[K], typeLiteral[V], class[Ann]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val iBinder = ScalaMapBinder.newMapBinder(binder, typeLiteral[W[String]], typeLiteral[W[Int]], classOf[Named])
           iBinder.addBinding(W("1")).toInstance(W(1))
           iBinder.addBinding(W("2")).toInstance(W(2))
@@ -267,7 +267,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind deep parameterization in class[K], class[V], class[Ann]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val iBinder = ScalaMapBinder.newMapBinder(binder, classOf[W[String]], classOf[W[Int]], classOf[Named])
           iBinder.addBinding(W("1")).toInstance(W(1))
           iBinder.addBinding(W("2")).toInstance(W(2))
@@ -282,7 +282,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind from multiple instances of the same MapBinder" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
           mBinder.addBinding("1").toInstance(1)
           val bBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
@@ -294,7 +294,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "bind duplicate keys not permitted by default" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
           mBinder.addBinding("1").toInstance(1)
           val bBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
@@ -308,7 +308,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "permit duplicate keys in empty [K,V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
           mBinder.permitDuplicates()
         }
@@ -318,7 +318,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "permit duplicate keys in [K,V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder)
           mBinder.permitDuplicates()
           mBinder.addBinding("1").toInstance(1)
@@ -331,7 +331,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "permit duplicate keys in [K,V](annotation)" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder[String, Int](binder, annotation)
           mBinder.permitDuplicates()
           mBinder.addBinding("1").toInstance(1)
@@ -344,7 +344,7 @@ class ScalaMapBinderSpec extends WordSpec with Matchers {
 
     "permit duplicate keys in [K,V,Ann]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           val mBinder = ScalaMapBinder.newMapBinder[String, Int, Named](binder)
           mBinder.permitDuplicates()
           mBinder.addBinding("1").toInstance(1)

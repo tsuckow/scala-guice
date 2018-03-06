@@ -31,7 +31,7 @@ class SetProviderSpec extends WordSpec with Matchers {
 
     "allow binding a Java Set" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[JSet[B]].toInstance( new JHashSet[B]() )
           bind[im.Set[B]].toProvider( new SetProvider( Key.get( typeLiteral[JSet[B]] ) ) )
         }
@@ -42,7 +42,7 @@ class SetProviderSpec extends WordSpec with Matchers {
     "allow binding a Java Set with a Java annotation" in {
       import name.Named
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[JSet[B]].annotatedWith[Named].toInstance( new JHashSet[B]() )
           bind[im.Set[B]].annotatedWith[Named].toProvider( new SetProvider( Key.get( typeLiteral[JSet[B]], classOf[Named] ) ) )
         }
@@ -52,7 +52,7 @@ class SetProviderSpec extends WordSpec with Matchers {
 
     "allow binding a Java Set with data" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[JSet[Int]].toInstance( testSet )
           bind[im.Set[Int]].toProvider( new SetProvider( Key.get( typeLiteral[JSet[Int]] ) ) )
         }

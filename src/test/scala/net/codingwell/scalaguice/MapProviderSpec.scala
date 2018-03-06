@@ -50,7 +50,7 @@ class MapProviderSpec extends WordSpec with Matchers {
   "A Map Provider" should {
     "allow binding a JMap[K, V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           bind[JMap[String, Int]].toInstance(testMap)
           bind[im.Map[String, Int]].toProvider(new MapProvider(Key.get(typeLiteral[JMap[String, Int]])))
         }
@@ -60,7 +60,7 @@ class MapProviderSpec extends WordSpec with Matchers {
 
     "allow binding a JMap[K, V] with an annotation" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           bind[JMap[String, Int]].annotatedWith[Named].toInstance(testMap)
           val provider = new MapProvider(Key.get(typeLiteral[JMap[String, Int]], classOf[Named]))
           bind[im.Map[String, Int]].annotatedWith[Named].toProvider(provider)
@@ -71,7 +71,7 @@ class MapProviderSpec extends WordSpec with Matchers {
 
     "allow binding a JMap[K, JSet[V]]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           bind[JMap[String, JSet[Int]]].toInstance(testMapToSet)
           val provider = new MapOfKToSetOfVProvider(Key.get(typeLiteral[JMap[String, JSet[Int]]]))
           bind[im.Map[String, im.Set[Int]]].toProvider(provider)
@@ -82,7 +82,7 @@ class MapProviderSpec extends WordSpec with Matchers {
 
     "allow binding a JMap[K, JSet[V]] with an annotation" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           bind[JMap[String, JSet[Int]]].annotatedWith[Named].toInstance(testMapToSet)
           val provider = new MapOfKToSetOfVProvider(Key.get(typeLiteral[JMap[String, JSet[Int]]], classOf[Named]))
           bind[im.Map[String, im.Set[Int]]].annotatedWith[Named].toProvider(provider)
@@ -93,7 +93,7 @@ class MapProviderSpec extends WordSpec with Matchers {
 
     "allow binding an empty JMap[K, V]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           bind[JMap[String, Int]].toInstance(newMap())
           bind[im.Map[String, Int]].toProvider(new MapProvider(Key.get(typeLiteral[JMap[String, Int]])))
         }
@@ -103,7 +103,7 @@ class MapProviderSpec extends WordSpec with Matchers {
 
     "allow binding an empty JMap[K, JSet[V]]" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           bind[JMap[String, JSet[Int]]].toInstance(newMap())
           val provider = new MapOfKToSetOfVProvider(Key.get(typeLiteral[JMap[String, JSet[Int]]]))
           bind[im.Map[String, im.Set[Int]]].toProvider(provider)

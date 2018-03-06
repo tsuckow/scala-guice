@@ -25,7 +25,7 @@ import org.scalatest.{Matchers, WordSpec}
 class InjectorExtensionsSpec extends WordSpec with Matchers {
 
   val module = new AbstractModule with ScalaModule {
-    def configure() = {
+    override def configure() = {
       bind[A].to[B]
       bind[A].annotatedWith(named("d")).to[B]
       bind[B].annotatedWith(classOf[Named]).to[B]

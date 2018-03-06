@@ -25,7 +25,7 @@ class OptionProviderSpec extends WordSpec with Matchers {
   "An Option Provider" should {
     "allow binding an Optional" in {
       val module = new AbstractModule with ScalaModule {
-        def configure(): Unit = {
+        override def configure(): Unit = {
           bind[Optional[String]].toInstance(Optional.of("Hello World"))
           val key = Key.get(typeLiteral[Optional[String]])
           bind[Option[String]].toProvider(new OptionProvider[String](key))
@@ -38,7 +38,7 @@ class OptionProviderSpec extends WordSpec with Matchers {
 
   "allow binding an Optional with an annotation" in {
     val module = new AbstractModule with ScalaModule {
-      def configure(): Unit = {
+      override def configure(): Unit = {
         bind[Optional[String]].annotatedWith[Named].toInstance(Optional.of("Hello World"))
         val key = Key.get(typeLiteral[Optional[String]], classOf[Named])
         bind[Option[String]].annotatedWith[Named].toProvider(new OptionProvider(key))
@@ -50,7 +50,7 @@ class OptionProviderSpec extends WordSpec with Matchers {
 
   "allow binding an absent Optional" in {
     val module = new AbstractModule with ScalaModule {
-      def configure(): Unit = {
+      override def configure(): Unit = {
           bind[Optional[String]].toInstance(Optional.absent())
           val key = Key.get(typeLiteral[Optional[String]])
           bind[Option[String]].toProvider(new OptionProvider[String](key))

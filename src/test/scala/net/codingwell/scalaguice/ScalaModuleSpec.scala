@@ -24,7 +24,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     "allow binding source type using a type parameter" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[A].to(classOf[B])
         }
       }
@@ -33,7 +33,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     "allow binding target type using a type parameter" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[A].to[B]
         }
       }
@@ -42,7 +42,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     "allow binding target provider type using a type parameter" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[A].toProvider[BProvider]
         }
       }
@@ -51,7 +51,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     "allow binding to provider of subtype using type parameter" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[Gen[String]].toProvider[CProvider]
         }
       }
@@ -60,7 +60,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     "allow binding to provider with injected type literal" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[String].toProvider[TypeProvider[B]]
         }
       }
@@ -69,7 +69,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     "allow binding in scope using a type parameter" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[A].to[B].in[Singleton]
         }
       }
@@ -79,7 +79,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
     "allow binding with annotation using a type parameter" in {
       import com.google.inject.name.Named
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[A].annotatedWith[Named].to[B]
         }
       }
@@ -88,7 +88,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     "allow use provider form javax.inject.Provider" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() {
+        override def configure() {
           bind[Foo].toProvider[FooProviderWithJavax]
         }
       }
@@ -97,7 +97,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     "give a useful error when bound on itself" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[A].to[A]
         }
       }
@@ -113,7 +113,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
     "allow use annotatedWithName" in {
       import net.codingwell.scalaguice.BindingExtensions._
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[String].annotatedWithName("first").toInstance("first")
           bindConstant().annotatedWithName("second").to("second")
         }
@@ -125,7 +125,7 @@ class ScalaModuleSpec extends WordSpec with Matchers {
 
     "allow binding annotation interceptor" in {
       val module = new AbstractModule with ScalaModule {
-        def configure() = {
+        override def configure() = {
           bind[Say].to[SayHi]
           bindInterceptor[AOPI](methodMatcher = annotatedWith[AOP])
         }
