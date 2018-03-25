@@ -141,6 +141,36 @@ class AThing @Inject() (@Annotation configs: immutable.Set[A]) { ... }
 class Service @Inject() (@Names.named("backend") configs: immutable.Set[ServiceConfiguration]) { ... }
 ```
 
+#### Generic Multibinding
+
+```scala
+trait Provider[T] {
+  def provide: T
+}
+
+class StringProvider extends Provider[String] {
+  override def provide = "Hello world!"
+}
+
+class IntProvider extends Provider[Int] {
+  override def provide = 42
+}
+```
+
+```scala
+val multibinder = ScalaMultibinder.newSetBinder[Provider[_]](binder)
+
+multibinder.addBinding.toInstance(new StringProvider)
+multibinder.addBinding.toInstance(new IntProvider)
+```
+
+`Provider[_]` is actually translated to `Provider[java.lang.Object]`. So you need to use `immutable.Set[Provider[Any]]` and not `immutable.Set[Provider[_]]` :
+
+```scala
+class SomeClass @Inject() (providers: immutable.Set[Provider[Any]]) { ... }
+```
+
+
 ### OptionBinding
 
 Newly available in Guice 4.0-beta5, we've got some support for OptionalBinder.
