@@ -14,7 +14,8 @@ useGpg := true
 
 libraryDependencies ++= Seq(
   "com.google.inject" % "guice" % "4.2.0",
-  "com.google.guava" % "guava" % "23.6-android"
+  "com.google.guava" % "guava" % "23.6-android",
+  "org.scala-lang" % "scala-reflect" % scalaVersion.value
 )
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"

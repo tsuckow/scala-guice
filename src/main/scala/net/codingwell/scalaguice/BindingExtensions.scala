@@ -19,6 +19,8 @@ import com.google.inject.Binder
 import com.google.inject.binder._
 import com.google.inject.name.Names
 import java.lang.annotation.{Annotation => JAnnotation}
+import scala.reflect.runtime.universe.TypeTag
+
 import javax.inject.Provider
 
 /**
@@ -44,7 +46,7 @@ import javax.inject.Provider
 object BindingExtensions {
 
   implicit class ScalaBinder(b: Binder) {
-    def bindType[T: Manifest] = b bind typeLiteral[T]
+    def bindType[T: TypeTag]: AnnotatedBindingBuilder[T] = b bind typeLiteral[T]
   }
 
   implicit class ScalaScopedBindingBuilder(b: ScopedBindingBuilder) {
@@ -52,7 +54,7 @@ object BindingExtensions {
   }
 
   implicit class ScalaLinkedBindingBuilder[T](b: LinkedBindingBuilder[T]) {
-    def toType[TImpl <: T : Manifest] = b to typeLiteral[TImpl]
+    def toType[TImpl <: T : TypeTag] = b to typeLiteral[TImpl]
 
     def toProviderType[TProvider <: Provider[_ <: T] : Manifest] = b toProvider cls[TProvider]
   }

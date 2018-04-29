@@ -16,54 +16,30 @@
 package net.codingwell
 
 import java.lang.annotation.Annotation
-import java.lang.reflect.Type
 
 import com.google.inject.internal.Annotations
-import com.google.inject.util.Types
+import com.google.inject.util.Types.newParameterizedType
 import com.google.inject.{Key, TypeLiteral}
 
 import scala.language.higherKinds
-import scala.reflect.ClassTag
+import scala.reflect.{ClassTag, classTag}
+import scala.reflect.runtime.universe.{TypeTag, runtimeMirror, typeOf}
+
 
 package object scalaguice {
+  private val mirror = runtimeMirror(getClass.getClassLoader)
+
   /**
    * Create a com.google.inject.TypeLiteral from a [[scala.reflect.Manifest]].
    * Subtypes of [[scala.AnyVal]] will be converted to their corresponding
    * Java wrapper classes.
    */
-  def typeLiteral[T: Manifest]: TypeLiteral[T] = {
-    TypeLiteral.get(typeOf[T]).asInstanceOf[TypeLiteral[T]]
+  def typeLiteral[T: TypeTag]: TypeLiteral[T] = {
+    val javaType = TypeConversions.scalaTypeToJavaType(typeOf[T])
+    TypeLiteral.get(javaType).asInstanceOf[TypeLiteral[T]]
   }
 
-  def cls[T: Manifest] = manifest[T].runtimeClass.asInstanceOf[Class[T]]
-
-  private def isArray[T](implicit m: Manifest[T]) = m.runtimeClass.isArray
-
-  private[scalaguice] def typeOf[T](implicit m: Manifest[T]): Type = {
-    def toWrapper(c: Type) = c match {
-      case java.lang.Byte.TYPE => classOf[java.lang.Byte]
-      case java.lang.Short.TYPE => classOf[java.lang.Short]
-      case java.lang.Character.TYPE => classOf[java.lang.Character]
-      case java.lang.Integer.TYPE => classOf[java.lang.Integer]
-      case java.lang.Long.TYPE => classOf[java.lang.Long]
-      case java.lang.Float.TYPE => classOf[java.lang.Float]
-      case java.lang.Double.TYPE => classOf[java.lang.Double]
-      case java.lang.Boolean.TYPE => classOf[java.lang.Boolean]
-      case java.lang.Void.TYPE => classOf[java.lang.Void]
-      case cls => cls
-    }
-
-    if (isArray[T]) return m.runtimeClass
-
-    import com.google.inject.util.Types
-    m.typeArguments match {
-      case Nil => toWrapper(m.runtimeClass)
-      case args => m.runtimeClass match {
-        case c: Class[_] if c.getEnclosingClass == null => Types.newParameterizedType(c, args.map(typeOf(_)): _*)
-        case c: Class[_] => Types.newParameterizedTypeWithOwner(c.getEnclosingClass, c, args.map(typeOf(_)): _*)
-      }
-    }
-  }
+  def cls[T: ClassTag] = classTag[T].runtimeClass.asInstanceOf[Class[T]]
 
   /**
    * Returns the name the set should use.  This is based on the annotation.
@@ -89,7 +65,7 @@ package object scalaguice {
 
   private[scalaguice] class WrapHelper[WType[_] : HKClassTag] {
     def around[T](typ: TypeLiteral[T]): TypeLiteral[WType[T]] = {
-      val wType = Types.newParameterizedType(implicitly[HKClassTag[WType]].runtimeClass, typ.getType)
+      val wType = newParameterizedType(implicitly[HKClassTag[WType]].runtimeClass, typ.getType)
       TypeLiteral.get(wType).asInstanceOf[TypeLiteral[WType[T]]]
     }
   }
@@ -101,7 +77,7 @@ package object scalaguice {
 
   private[scalaguice] class WrapHelper2[WType[_, _] : HKClassTag2] {
     def around[K, V](kTyp: TypeLiteral[K], vTyp: TypeLiteral[V]): TypeLiteral[WType[K, V]] = {
-      val wType = Types.newParameterizedType(
+      val wType = newParameterizedType(
         implicitly[HKClassTag2[WType]].runtimeClass,
         kTyp.getType,
         vTyp.getType
