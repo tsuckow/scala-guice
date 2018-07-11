@@ -22,7 +22,7 @@ import java.lang.annotation.Annotation
 import java.lang.reflect.{AnnotatedElement, Method}
 import javax.inject.Provider
 import org.aopalliance.intercept.MethodInterceptor
-
+import scala.reflect.runtime.universe._
 
 /**
  * Allows binding via type parameters. Mix into <code>AbstractModule</code>
@@ -64,14 +64,14 @@ import org.aopalliance.intercept.MethodInterceptor
 trait InternalModule[B <: Binder] {
   import ScalaModule._
 
-  class BindingBuilder[T: Manifest] extends ScalaAnnotatedBindingBuilder[T] {
+  class BindingBuilder[T: TypeTag] extends ScalaAnnotatedBindingBuilder[T] {
     val myBinder = binderAccess
     val self = myBinder.bind(typeLiteral[T])
   }
 
   protected[this] def binderAccess: B
 
-  protected[this] def bind[T: Manifest] = new BindingBuilder[T]
+  protected[this] def bind[T: TypeTag] = new BindingBuilder[T]
 
   protected[this] def bindInterceptor[I <: MethodInterceptor : Manifest](classMatcher: Matcher[_ >: Class[_]] = Matchers.any(), methodMatcher: Matcher[_ >: AnnotatedElement]) {
     val myBinder = binderAccess

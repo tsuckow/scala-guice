@@ -18,17 +18,18 @@ package net.codingwell.scalaguice
 import com.google.inject.{Binding, Key, Injector}
 import java.lang.annotation.Annotation
 import KeyExtensions._
+import scala.reflect.runtime.universe._
 
 object InjectorExtensions {
 
   implicit class ScalaInjector(i: Injector) {
-    def instance[T: Manifest] = i.getInstance(typeLiteral[T].toKey)
-    def instance[T: Manifest](ann: Annotation) = i.getInstance(typeLiteral[T].annotatedWith(ann))
-    def instance[T: Manifest, Ann <: Annotation : Manifest] = i.getInstance(typeLiteral[T].annotatedWith[Ann])
+    def instance[T: TypeTag] = i.getInstance(typeLiteral[T].toKey)
+    def instance[T: TypeTag](ann: Annotation) = i.getInstance(typeLiteral[T].annotatedWith(ann))
+    def instance[T: TypeTag, Ann <: Annotation : Manifest] = i.getInstance(typeLiteral[T].annotatedWith[Ann])
 
-    def existingBinding[T: Manifest]: Option[Binding[T]] = existingBinding(typeLiteral[T].toKey)
-    def existingBinding[T: Manifest](ann: Annotation): Option[Binding[T]] = existingBinding(typeLiteral[T].annotatedWith(ann))
-    def existingBinding[T: Manifest, Ann <: Annotation : Manifest]: Option[Binding[T]] = existingBinding(typeLiteral[T].annotatedWith[Ann])
+    def existingBinding[T: TypeTag]: Option[Binding[T]] = existingBinding(typeLiteral[T].toKey)
+    def existingBinding[T: TypeTag](ann: Annotation): Option[Binding[T]] = existingBinding(typeLiteral[T].annotatedWith(ann))
+    def existingBinding[T: TypeTag, Ann <: Annotation : Manifest]: Option[Binding[T]] = existingBinding(typeLiteral[T].annotatedWith[Ann])
     def existingBinding[T](key: Key[T]): Option[Binding[T]] = Option(i.getExistingBinding(key))
   }
 }

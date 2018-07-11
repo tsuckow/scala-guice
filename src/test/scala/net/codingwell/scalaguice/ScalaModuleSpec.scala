@@ -133,6 +133,21 @@ class ScalaModuleSpec extends WordSpec with Matchers {
       val say = Guice.createInjector(module).getInstance(classOf[Say])
       say.hi("Bob") should be ("Hi Bob")
     }
+
+    //This test needs work to resolve #65
+    "allow binding by name to Unit" ignore {
+      val foo:(=> Unit) => String = (a) => "dog"
+      val module = new AbstractModule with ScalaModule {
+        override def configure() = {
+          bind[(=> Unit) => String].toInstance(foo)
+          bindInterceptor[AOPI](methodMatcher = annotatedWith[AOP])
+        }
+      }
+      import net.codingwell.scalaguice.InjectorExtensions._
+      val injector = Guice.createInjector(module)
+      val func = injector.instance[(=> Unit) => String]
+      func shouldEqual foo
+    }
   }
 
 }
